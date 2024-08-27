@@ -1,5 +1,6 @@
 package com.shivam.CreditMate.filter;
 
+import com.shivam.CreditMate.model.User;
 import com.shivam.CreditMate.security.JwtUtil;
 import com.shivam.CreditMate.service.UserService;
 import com.shivam.CreditMate.service.impl.UserServiceImpl;
@@ -59,7 +60,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
             if (username != null && authentication == null) {
-                UserDetails userDetails = userService.loadUserByUsername(username);
+                User userDetails = userService.loadUserByUsername(username);
 
                 if (jwtUtil.validateToken(jwt, userDetails)) {
                     UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(

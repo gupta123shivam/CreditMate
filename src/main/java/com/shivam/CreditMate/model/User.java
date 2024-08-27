@@ -47,12 +47,16 @@ public class User implements UserDetails {
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 
+    @Column(name = "logged_in")
+    private boolean loggedIn;
+
     // Automatically set UUID when the entity is first persisted
     @PrePersist
     void assign() {
         this.uuid = UUID.randomUUID().toString();
         this.createdAt = LocalDateTime.now();
         this.username = this.email;
+        this.loggedIn = false;
     }
 
     // Override methods from UserDetails for Spring Security

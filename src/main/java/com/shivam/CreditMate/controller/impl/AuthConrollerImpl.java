@@ -6,6 +6,7 @@ import com.shivam.CreditMate.dto.request.RegisterRequestDto;
 import com.shivam.CreditMate.dto.response.LoginResponseDto;
 import com.shivam.CreditMate.dto.response.RegisterResponseDto;
 import com.shivam.CreditMate.exception.exceptions.AuthException.*;
+import com.shivam.CreditMate.model.User;
 import com.shivam.CreditMate.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -13,12 +14,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.security.Principal;
 
 @Slf4j
 @RestController
@@ -58,6 +60,10 @@ public class AuthConrollerImpl implements AuthController {
         try {
             LoginResponseDto loginResponse = authService.loginUser(loginRequestDto);
 
+            // Set JWT in response headers
+            HttpHeaders headers = new HttpHeaders();
+            headers.set("Authorization", "Bearer " + loginResponse.getJwtToken());
+
             return ResponseEntity.ok(loginResponse);
         } catch (InvalidCredentialsException | UserNotFoundException e) {
             throw e;  // Re-throwing the exception to be handled by the global exception handler
@@ -65,5 +71,12 @@ public class AuthConrollerImpl implements AuthController {
             // Optionally log the exception or perform other logic
             throw e;  // Re-throwing the exception to be handled by the global exception handler
         }
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @Override
+    @GetMapping("/logout")
+    public ResponseEntity<String> logoutUser(@AuthenticationPrincipal User userDetails) {
+        return ResponseEntity.ok(authService.logoutUser(userDetails));
     }
 }

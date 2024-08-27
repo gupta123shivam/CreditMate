@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.shivam.CreditMate.enums.Role;
 import com.shivam.CreditMate.exception.exceptions.AuthException.*;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -73,7 +74,7 @@ public class AuthServiceImpl implements AuthService {
         input.setUsername(input.getEmail());
         try {
             // Check if this username already exists or not
-            User user = userRepository.findByUsername(input.getUsername())
+            User foundUser = userRepository.findByUsername(input.getUsername())
                     .orElseThrow(() -> new UserNotFoundException("User not found."));
 
             // Authenticate the user
@@ -83,6 +84,9 @@ public class AuthServiceImpl implements AuthService {
                             input.getPassword()
                     )
             );
+            // Mark user as logged in
+            foundUser.setLoggedIn(true);
+            userRepository.save(foundUser);
 
             // If authentication is successful, generate a JWT token
             User userDetails = (User) authentication.getPrincipal();
@@ -94,6 +98,18 @@ public class AuthServiceImpl implements AuthService {
             return loginResponseDto;
         } catch (AuthenticationException e) {
             throw new InvalidCredentialsException("Invalid credentials");
+        }
+    }
+
+    @Override
+    public String logoutUser(User user) {
+        try {
+            user.setLoggedIn(false);
+            userRepository.save(user);
+
+            return "User logged out successfully";
+        } catch (Exception e) {
+            return "Logout failed";
         }
     }
 }
