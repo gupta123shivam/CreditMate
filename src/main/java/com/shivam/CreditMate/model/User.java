@@ -52,7 +52,7 @@ public class User implements UserDetails {
 
     // Automatically set UUID when the entity is first persisted
     @PrePersist
-    void assign() {
+    void onCreate() {
         this.uuid = UUID.randomUUID().toString();
         this.createdAt = LocalDateTime.now();
         this.username = this.email;
