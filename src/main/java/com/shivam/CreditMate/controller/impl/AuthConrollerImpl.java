@@ -5,7 +5,7 @@ import com.shivam.CreditMate.dto.request.LoginRequestDto;
 import com.shivam.CreditMate.dto.request.RegisterRequestDto;
 import com.shivam.CreditMate.dto.response.LoginResponseDto;
 import com.shivam.CreditMate.dto.response.RegisterResponseDto;
-import com.shivam.CreditMate.exception.exceptions.EmailAlreadyExistsException;
+import com.shivam.CreditMate.exception.exceptions.AuthException.*;
 import com.shivam.CreditMate.service.AuthService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,9 +41,10 @@ public class AuthConrollerImpl implements AuthController {
 
             return ResponseEntity.status(HttpStatus.CREATED).headers(httpHeaders).body(registerResponse);
         } catch (EmailAlreadyExistsException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
+            throw e;  // Re-throwing the exception to be handled by the global exception handler
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+            // Optionally log the exception or perform other logic
+            throw e;  // Re-throwing the exception to be handled by the global exception handler
         }
     }
 
@@ -53,8 +54,11 @@ public class AuthConrollerImpl implements AuthController {
         try {
             LoginResponseDto loginResponse = authService.loginUser(loginRequestDto);
             return ResponseEntity.ok(loginResponse);
+        } catch (InvalidCredentialsException | UserNotFoundException e) {
+            throw e;  // Re-throwing the exception to be handled by the global exception handler
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+            // Optionally log the exception or perform other logic
+            throw e;  // Re-throwing the exception to be handled by the global exception handler
         }
     }
 }

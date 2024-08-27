@@ -4,7 +4,6 @@ import com.shivam.CreditMate.dto.request.LoginRequestDto;
 import com.shivam.CreditMate.dto.request.RegisterRequestDto;
 import com.shivam.CreditMate.dto.response.LoginResponseDto;
 import com.shivam.CreditMate.dto.response.RegisterResponseDto;
-import com.shivam.CreditMate.exception.exceptions.EmailAlreadyExistsException;
 import com.shivam.CreditMate.mapper.UserMapper;
 import com.shivam.CreditMate.model.User;
 import com.shivam.CreditMate.repository.UserRepository;
@@ -12,6 +11,7 @@ import com.shivam.CreditMate.security.JwtUtil;
 import com.shivam.CreditMate.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.shivam.CreditMate.enums.Role;
+import com.shivam.CreditMate.exception.exceptions.AuthException.*;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -20,7 +20,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.net.URI;
 import java.util.Optional;
 
 @Service
@@ -72,10 +71,8 @@ public class AuthServiceImpl implements AuthService {
 
         try {
             // Check if this username already exists or not
-            Optional<User> user = userRepository.findByUsername(input.getUsername());
-            if (user.isEmpty()) {
-                throw new UsernameNotFoundException("User does not exists");
-            }
+            User user = userRepository.findByUsername(input.getUsername())
+                    .orElseThrow(() -> new UserNotFoundException("User not found."));
 
             // Authenticate the user
             Authentication authentication = authenticationManager.authenticate(
@@ -94,8 +91,7 @@ public class AuthServiceImpl implements AuthService {
 
             return loginResponseDto;
         } catch (AuthenticationException e) {
-            // Handle authentication failure
-            throw new RuntimeException("Invalid credentials", e);
+            throw new InvalidCredentialsException("Invalid credentials");
         }
     }
 }
