@@ -27,14 +27,16 @@ public class SecurityConfig {
                 .cors(cors -> cors.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/health",
+                                "/test**",
+                                "/public/**",
                                 "/swagger-ui.html",
                                 "/swagger-resources",
                                 "/swagger-resources/**",
                                 "/swagger-ui/**",
                                 "/actuator/health",
                                 "/v3/api-docs/**",
-                                "/api/users/register",
-                                "/api/users/login").permitAll()
+                                "/api/auth/register",
+                                "/api/auth/login").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS));

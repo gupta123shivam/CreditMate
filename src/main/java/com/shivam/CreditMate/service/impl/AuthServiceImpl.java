@@ -9,6 +9,7 @@ import com.shivam.CreditMate.model.User;
 import com.shivam.CreditMate.repository.UserRepository;
 import com.shivam.CreditMate.security.JwtUtil;
 import com.shivam.CreditMate.service.AuthService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.shivam.CreditMate.enums.Role;
 import com.shivam.CreditMate.exception.exceptions.AuthException.*;
@@ -22,6 +23,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+@Slf4j
 @Service
 public class AuthServiceImpl implements AuthService {
     private final UserRepository userRepository;
@@ -45,6 +47,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public RegisterResponseDto registerUser(RegisterRequestDto input) {
+        log.info("Entering registerUser from authService" + input);
         // Check if this email already exists or not
         if (userRepository.existsByEmail(input.getEmail())) {
             throw new EmailAlreadyExistsException("Email already exists");
@@ -68,7 +71,6 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public LoginResponseDto loginUser(LoginRequestDto input) {
         input.setUsername(input.getEmail());
-
         try {
             // Check if this username already exists or not
             User user = userRepository.findByUsername(input.getUsername())

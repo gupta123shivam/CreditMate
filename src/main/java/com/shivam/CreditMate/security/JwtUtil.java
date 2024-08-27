@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -15,12 +17,13 @@ import java.util.function.Function;
 
 @Component
 public class JwtUtil {
+    private final SecretKey secretKey;
+    private final long expirationInSeconds;
 
-    @Value("${jwt.secret-key}")
-    private String secretKey;
-
-    @Value("${jwt.expiration-hours}")
-    private int expirationInHours;
+    public JwtUtil(@Value("${jwt.secret-key}") String key, @Value("${jwt.expiration-seconds}") int expirationInSeconds) {
+        this.secretKey = getSecretKey(key);
+        this.expirationInSeconds = expirationInSeconds;
+    }
 
     public String generateToken(User user) {
         Map<String, Object> claims = new HashMap<>();
@@ -32,8 +35,8 @@ public class JwtUtil {
                 .setClaims(claims)
                 .setSubject(user.getUsername())
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + 1000L * 60 * 60 * expirationInHours)) // Expiry
-                .signWith(SignatureAlgorithm.HS256, secretKey)
+                .setExpiration(new Date(System.currentTimeMillis() + 1000L * expirationInSeconds)) // Expiry
+                .signWith(SignatureAlgorithm.HS256, this.secretKey)
                 .compact();
     }
 
@@ -43,7 +46,7 @@ public class JwtUtil {
     }
 
     private Claims extractAllClaims(String token) {
-        return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody();
+        return Jwts.parser().setSigningKey(this.secretKey).parseClaimsJws(token).getBody();
     }
 
     public String extractUsername(String token) {
@@ -57,6 +60,23 @@ public class JwtUtil {
     public boolean validateToken(String token, UserDetails userDetails) {
         final String username = extractUsername(token);
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+    }
+
+    // Convert hex string to byte array
+    private byte[] hexStringToByteArray(String hex) {
+        int len = hex.length();
+        byte[] data = new byte[len / 2];
+        for (int i = 0; i < len; i += 2) {
+            data[i / 2] = (byte) ((Character.digit(hex.charAt(i), 16) << 4)
+                    + Character.digit(hex.charAt(i + 1), 16));
+        }
+        return data;
+    }
+
+    // Create SecretKey from hex string
+    private SecretKey getSecretKey(String key) {
+        byte[] keyBytes = hexStringToByteArray(key);
+        return new SecretKeySpec(keyBytes, SignatureAlgorithm.HS256.getJcaName());
     }
 }
 
