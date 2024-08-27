@@ -64,7 +64,7 @@ public class AuthConrollerImpl implements AuthController {
             HttpHeaders headers = new HttpHeaders();
             headers.set("Authorization", "Bearer " + loginResponse.getJwtToken());
 
-            return ResponseEntity.ok(loginResponse);
+            return ResponseEntity.status(HttpStatus.OK).headers(headers).body(loginResponse);
         } catch (InvalidCredentialsException | UserNotFoundException e) {
             throw e;  // Re-throwing the exception to be handled by the global exception handler
         } catch (Exception e) {
