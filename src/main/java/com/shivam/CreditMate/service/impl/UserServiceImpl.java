@@ -7,6 +7,7 @@ import com.shivam.CreditMate.repository.UserRepository;
 import com.shivam.CreditMate.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -19,11 +20,21 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ResponseEntity<UserDetailsDto> findByUuid(String uuid) {
-        try{
+        try {
             User user = userRepository.findByUuid(uuid).orElseThrow();
             return ResponseEntity.ok(userMapper.userToUserDetailsDto(user));
-        }catch (Exception e){
+        } catch (Exception e) {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @Override
+    public User loadUserByEmail(String email) {
+        return userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("User not found."));
+    }
+
+    @Override
+    public User loadUserByUsername(String username) {
+        return userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User not found."));
     }
 }

@@ -9,28 +9,30 @@ import com.shivam.CreditMate.mapper.UserMapper;
 import com.shivam.CreditMate.model.User;
 import com.shivam.CreditMate.repository.UserRepository;
 import com.shivam.CreditMate.service.AuthService;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import com.shivam.CreditMate.enums.Role;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.net.URI;
 
 @Service
 public class AuthServiceImpl implements AuthService {
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final UserMapper userMapper;
+
     @Autowired
-    private UserRepository userRepository;
-    
-    @Autowired 
-    private PasswordEncoder passwordEncoder;
-    
-    @Autowired private UserMapper userMapper;
+    public AuthServiceImpl(UserRepository userRepository,
+                           PasswordEncoder passwordEncoder,
+                           UserMapper userMapper) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.userMapper = userMapper;
+    }
 
     @Override
     public ResponseEntity<RegisterResponseDto> registerUser(RegisterRequestDto input) {
@@ -56,7 +58,7 @@ public class AuthServiceImpl implements AuthService {
         // Return response entity with CREATED status
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setLocation(URI.create("/api/users/" + savedUser.getUuid()));
-        
+
         return ResponseEntity.status(HttpStatus.CREATED).headers(httpHeaders).body(body);
     }
 
