@@ -19,13 +19,9 @@ public class UserServiceImpl implements UserService {
     UserMapper userMapper;
 
     @Override
-    public ResponseEntity<UserDetailsDto> findByUuid(String uuid) {
-        try {
-            User user = userRepository.findByUuid(uuid).orElseThrow();
-            return ResponseEntity.ok(userMapper.userToUserDetailsDto(user));
-        } catch (Exception e) {
-            return ResponseEntity.notFound().build();
-        }
+    public UserDetailsDto findByUuid(String uuid) {
+        User user = userRepository.findByUuid(uuid).orElseThrow();
+        return userMapper.userToUserDetailsDto(user);
     }
 
     @Override

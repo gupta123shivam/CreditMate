@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 public interface UserService {
-    ResponseEntity<UserDetailsDto> findByUuid(String uuid);
+    UserDetailsDto findByUuid(String uuid);
 
     User loadUserByEmail(String email);
 

@@ -16,4 +16,5 @@ public class LoginResponseDto {
     private String role;
     private String username;
     private String uuid;
+    private String jwtToken;
 }

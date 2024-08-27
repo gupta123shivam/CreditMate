@@ -4,38 +4,48 @@ import com.shivam.CreditMate.dto.request.LoginRequestDto;
 import com.shivam.CreditMate.dto.request.RegisterRequestDto;
 import com.shivam.CreditMate.dto.response.LoginResponseDto;
 import com.shivam.CreditMate.dto.response.RegisterResponseDto;
-import com.shivam.CreditMate.exception.userService.EmailAlreadyExistsException;
+import com.shivam.CreditMate.exception.exceptions.EmailAlreadyExistsException;
 import com.shivam.CreditMate.mapper.UserMapper;
 import com.shivam.CreditMate.model.User;
 import com.shivam.CreditMate.repository.UserRepository;
+import com.shivam.CreditMate.security.JwtUtil;
 import com.shivam.CreditMate.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import com.shivam.CreditMate.enums.Role;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.net.URI;
+import java.util.Optional;
 
 @Service
 public class AuthServiceImpl implements AuthService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
+    private final AuthenticationManager authenticationManager;
+    private final JwtUtil jwtUtil;
 
     @Autowired
-    public AuthServiceImpl(UserRepository userRepository,
+    public AuthServiceImpl(AuthenticationManager authenticationManager,
+                           UserRepository userRepository,
                            PasswordEncoder passwordEncoder,
-                           UserMapper userMapper) {
+                           UserMapper userMapper,
+                           JwtUtil jwtUtil) {
+        this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.userMapper = userMapper;
+        this.jwtUtil = jwtUtil;
     }
 
     @Override
-    public ResponseEntity<RegisterResponseDto> registerUser(RegisterRequestDto input) {
+    public RegisterResponseDto registerUser(RegisterRequestDto input) {
         // Check if this email already exists or not
         if (userRepository.existsByEmail(input.getEmail())) {
             throw new EmailAlreadyExistsException("Email already exists");
@@ -53,17 +63,39 @@ public class AuthServiceImpl implements AuthService {
         User savedUser = userRepository.save(user);
 
         // Map saved user to RegisterResponseDto
-        RegisterResponseDto body = userMapper.userToRegisterResponseDto(savedUser);
-
-        // Return response entity with CREATED status
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setLocation(URI.create("/api/users/" + savedUser.getUuid()));
-
-        return ResponseEntity.status(HttpStatus.CREATED).headers(httpHeaders).body(body);
+        return userMapper.userToRegisterResponseDto(savedUser);
     }
 
     @Override
-    public LoginResponseDto loginUser(LoginRequestDto loginRequestDto) {
-        return null;
+    public LoginResponseDto loginUser(LoginRequestDto input) {
+        input.setUsername(input.getEmail());
+
+        try {
+            // Check if this username already exists or not
+            Optional<User> user = userRepository.findByUsername(input.getUsername());
+            if (user.isEmpty()) {
+                throw new UsernameNotFoundException("User does not exists");
+            }
+
+            // Authenticate the user
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            input.getEmail(),
+                            input.getPassword()
+                    )
+            );
+
+            // If authentication is successful, generate a JWT token
+            User userDetails = (User) authentication.getPrincipal();
+            String jwtToken = jwtUtil.generateToken(userDetails);
+
+            LoginResponseDto loginResponseDto = userMapper.userToLoginResponseDto(userDetails);
+            loginResponseDto.setJwtToken(jwtToken);
+
+            return loginResponseDto;
+        } catch (AuthenticationException e) {
+            // Handle authentication failure
+            throw new RuntimeException("Invalid credentials", e);
+        }
     }
 }
