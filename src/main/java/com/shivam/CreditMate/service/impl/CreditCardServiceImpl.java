@@ -48,7 +48,7 @@ public class CreditCardServiceImpl implements CreditCardService {
                 .currentBalance(creditLimit)  // Initial balance is zero
                 .status(CreditCardStatus.ACTIVE)  // Set default status
                 .transactionRight(TransactionRight.VIEW_ONLY)  // Default transaction right
-                .activated(true)  // Set default activated state
+                .activated(false)  // Set default activated state
                 .build();
 
         // Save the credit card to the database
@@ -93,6 +93,20 @@ public class CreditCardServiceImpl implements CreditCardService {
         return creditCardList.stream()
                 .map(this::mapToResponseDto)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public void activateCard(Long cardId) {
+        CreditCard creditCard = findByIdAndCurrentUser(cardId);
+        creditCard.setActivated(true);
+        creditCardRepository.save(creditCard);
+    }
+
+    @Override
+    public void deactivateCard(Long cardId) {
+        CreditCard creditCard = findByIdAndCurrentUser(cardId);
+        creditCard.setActivated(false);
+        creditCardRepository.save(creditCard);
     }
 
     // checking is current user is authorized to perform action or not

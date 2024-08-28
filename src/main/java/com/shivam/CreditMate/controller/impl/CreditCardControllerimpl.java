@@ -29,21 +29,20 @@ public class CreditCardControllerimpl implements CreditCardController {
     }
 
     @Override
-    public ResponseEntity<CreditCardResponseDto> getCreditCardById(int cardId) {
-        CreditCardResponseDto response = creditCardService.getCreditCardById((long) cardId);
+    public ResponseEntity<CreditCardResponseDto> getCreditCardById(Long cardId) {
+        CreditCardResponseDto response = creditCardService.getCreditCardById(cardId);
         return ResponseEntity.ok(response); // HTTP 200 OK
     }
 
     @Override
-    public ResponseEntity<CreditCardResponseDto> updateCreditCard(int cardId, CreditCardRequestDto creditCardRequestDto) {
-        CreditCardResponseDto response = creditCardService.updateCreditCard((long) cardId, creditCardRequestDto);
+    public ResponseEntity<CreditCardResponseDto> updateCreditCard(Long cardId, CreditCardRequestDto creditCardRequestDto) {
+        CreditCardResponseDto response = creditCardService.updateCreditCard(cardId, creditCardRequestDto);
         return ResponseEntity.ok(response); // HTTP 200 OK
     }
 
     @Override
-    public ResponseEntity<Void> deleteCreditCard(int cardId) {
-
-        creditCardService.deleteCreditCard((long) cardId);
+    public ResponseEntity<Void> deleteCreditCard(Long cardId) {
+        creditCardService.deleteCreditCard(cardId);
         return ResponseEntity.noContent().build(); // HTTP 204 No Content
     }
 
@@ -51,5 +50,15 @@ public class CreditCardControllerimpl implements CreditCardController {
     public ResponseEntity<List<CreditCardResponseDto>> getAllCards() {
         List<CreditCardResponseDto> response = creditCardService.getAllCardsOfCurrentUser();
         return ResponseEntity.ok(response); // HTTP 200 OK
+    }
+
+    public ResponseEntity<Void> activateCard(Long cardId) {
+        creditCardService.activateCard(cardId);
+        return ResponseEntity.noContent().build(); // HTTP 204 No Content
+    }
+
+    public ResponseEntity<Void> deactivateCard(Long cardId) {
+        creditCardService.deactivateCard(cardId);
+        return ResponseEntity.noContent().build(); // HTTP 204 No Content
     }
 }

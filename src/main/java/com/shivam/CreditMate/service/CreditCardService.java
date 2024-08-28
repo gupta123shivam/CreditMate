@@ -16,4 +16,8 @@ public interface CreditCardService {
     void deleteCreditCard(Long cardId);
 
     List<CreditCardResponseDto> getAllCardsOfCurrentUser();
+
+    void activateCard(Long cardId);
+
+    void deactivateCard(Long cardId);
 }
