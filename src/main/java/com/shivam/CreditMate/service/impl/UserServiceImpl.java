@@ -1,7 +1,7 @@
 package com.shivam.CreditMate.service.impl;
 
 import com.shivam.CreditMate.dto.request.UserUpdateRequestDto;
-import com.shivam.CreditMate.exception.exceptions.AuthException.*;
+import com.shivam.CreditMate.exception.exceptions.AuthException.UserNotFoundException;
 import com.shivam.CreditMate.mapper.UserMapper;
 import com.shivam.CreditMate.model.User;
 import com.shivam.CreditMate.repository.UserRepository;

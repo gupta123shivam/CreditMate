@@ -8,5 +8,6 @@ import java.util.Optional;
 
 public interface CreditCardRepository extends JpaRepository<CreditCard, Long> {
     List<CreditCard> findByUserId(Long userId);
+
     Optional<CreditCard> findByUuid(String uuid);
 }

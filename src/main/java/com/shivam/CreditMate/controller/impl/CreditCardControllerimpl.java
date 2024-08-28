@@ -3,13 +3,11 @@ package com.shivam.CreditMate.controller.impl;
 import com.shivam.CreditMate.controller.CreditCardController;
 import com.shivam.CreditMate.dto.request.CreditCardRequestDto;
 import com.shivam.CreditMate.dto.response.CreditCardResponseDto;
-import com.shivam.CreditMate.exception.exceptions.CreditCardException.*;
 import com.shivam.CreditMate.service.CreditCardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 

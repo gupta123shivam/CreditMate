@@ -1,8 +1,11 @@
 package com.shivam.CreditMate.exception;
 
-import com.shivam.CreditMate.exception.exceptions.AuthException.*;
-import com.shivam.CreditMate.exception.exceptions.CreditCardException.*;
-import com.shivam.CreditMate.exception.exceptions.UserException.*;
+import com.shivam.CreditMate.exception.exceptions.AuthException.EmailAlreadyExistsException;
+import com.shivam.CreditMate.exception.exceptions.AuthException.InvalidCredentialsException;
+import com.shivam.CreditMate.exception.exceptions.AuthException.UserNotFoundException;
+import com.shivam.CreditMate.exception.exceptions.CreditCardException.CreditCardDoesNotExist;
+import com.shivam.CreditMate.exception.exceptions.CreditCardException.UserNotAuthorizedForThisCreditCard;
+import com.shivam.CreditMate.exception.exceptions.UserException.InvalidUserUpdateException;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;

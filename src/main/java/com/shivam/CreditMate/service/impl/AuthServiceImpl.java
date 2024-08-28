@@ -4,6 +4,10 @@ import com.shivam.CreditMate.dto.request.LoginRequestDto;
 import com.shivam.CreditMate.dto.request.RegisterRequestDto;
 import com.shivam.CreditMate.dto.response.LoginResponseDto;
 import com.shivam.CreditMate.dto.response.RegisterResponseDto;
+import com.shivam.CreditMate.enums.Role;
+import com.shivam.CreditMate.exception.exceptions.AuthException.EmailAlreadyExistsException;
+import com.shivam.CreditMate.exception.exceptions.AuthException.InvalidCredentialsException;
+import com.shivam.CreditMate.exception.exceptions.AuthException.UserNotFoundException;
 import com.shivam.CreditMate.mapper.UserMapper;
 import com.shivam.CreditMate.model.User;
 import com.shivam.CreditMate.repository.UserRepository;
@@ -11,18 +15,12 @@ import com.shivam.CreditMate.security.JwtUtil;
 import com.shivam.CreditMate.service.AuthService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import com.shivam.CreditMate.enums.Role;
-import com.shivam.CreditMate.exception.exceptions.AuthException.*;
-import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Slf4j
 @Service

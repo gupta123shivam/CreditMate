@@ -5,7 +5,9 @@ import com.shivam.CreditMate.dto.request.LoginRequestDto;
 import com.shivam.CreditMate.dto.request.RegisterRequestDto;
 import com.shivam.CreditMate.dto.response.LoginResponseDto;
 import com.shivam.CreditMate.dto.response.RegisterResponseDto;
-import com.shivam.CreditMate.exception.exceptions.AuthException.*;
+import com.shivam.CreditMate.exception.exceptions.AuthException.EmailAlreadyExistsException;
+import com.shivam.CreditMate.exception.exceptions.AuthException.InvalidCredentialsException;
+import com.shivam.CreditMate.exception.exceptions.AuthException.UserNotFoundException;
 import com.shivam.CreditMate.model.User;
 import com.shivam.CreditMate.service.AuthService;
 import jakarta.validation.Valid;
@@ -14,13 +16,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
-import java.security.Principal;
 
 @Slf4j
 @RestController
