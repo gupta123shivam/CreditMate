@@ -3,6 +3,7 @@ package com.shivam.CreditMate.utils;
 import com.shivam.CreditMate.enums.Role;
 import com.shivam.CreditMate.exception.exceptions.AuthException;
 import com.shivam.CreditMate.model.User;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -24,12 +25,10 @@ public class UserUtil {
     }
 
     public static User getLoggedInUser() {
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        if (principal instanceof UserDetails) {
-            return (User) principal;
-        } else {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !(authentication.getPrincipal() instanceof User)) {
             throw new AuthException.InvalidCredentialsException();
         }
+        return (User) authentication.getPrincipal();
     }
 }

@@ -11,7 +11,7 @@ public enum AppErrorCodes implements ErrorCode {
     ERR_1004("Password must contain at least one uppercase letter, one lowercase letter, and one number", HttpStatus.BAD_REQUEST),
     ERR_1005("Constraints not follwed", HttpStatus.BAD_REQUEST),
 
-    // Business logic errors
+    // Auth errors
     ERR_2001("Email already exists", HttpStatus.CONFLICT),
     ERR_2002("User not found", HttpStatus.NOT_FOUND),
     ERR_2003("Invalid credentials", HttpStatus.UNAUTHORIZED),
@@ -20,7 +20,10 @@ public enum AppErrorCodes implements ErrorCode {
     ERR_3001("Credit Card does not exist.", HttpStatus.NOT_FOUND),
     ERR_3002("User is not authorized to perform action on this credit card.", HttpStatus.UNAUTHORIZED),
 
-    ERR_4001("Something bad happened. please try later", HttpStatus.INTERNAL_SERVER_ERROR);
+    ERR_4001("Something bad happened. please try later", HttpStatus.INTERNAL_SERVER_ERROR),
+
+    // User error
+    ERR_5001("Invalid User profile update values", HttpStatus.BAD_REQUEST);
 
     private final String message;
     private final HttpStatus httpStatus;

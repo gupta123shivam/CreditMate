@@ -2,8 +2,8 @@ package com.shivam.CreditMate.exception;
 
 import com.shivam.CreditMate.exception.exceptions.AuthException.*;
 import com.shivam.CreditMate.exception.exceptions.CreditCardException.*;
+import com.shivam.CreditMate.exception.exceptions.UserException.*;
 import jakarta.validation.ConstraintViolationException;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -74,6 +74,10 @@ public class GlobalExceptionHandler {
         return buildErrorResponse(AppErrorCodes.ERR_4001, ex.getMessage());
     }
 
+    @ExceptionHandler(InvalidUserUpdateException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidUserUpdateException(InvalidUserUpdateException ex) {
+        return buildErrorResponse(AppErrorCodes.ERR_5001, ex.getMessage());
+    }
 
     // Helper method to build error response
     private ResponseEntity<ErrorResponse> buildErrorResponse(AppErrorCodes errorCode, String errorDetail) {

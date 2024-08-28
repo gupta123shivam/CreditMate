@@ -1,5 +1,6 @@
 package com.shivam.CreditMate.service;
 
+import com.shivam.CreditMate.dto.request.UserUpdateRequestDto;
 import com.shivam.CreditMate.model.User;
 
 public interface UserService {
@@ -8,4 +9,6 @@ public interface UserService {
     User loadUserByEmail(String email);
 
     User loadUserByUsername(String username);
+
+    User updateUserProfile(UserUpdateRequestDto userUpdateRequestDto);
 }

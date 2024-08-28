@@ -30,47 +30,26 @@ public class CreditCardControllerimpl implements CreditCardController {
 
     @Override
     public ResponseEntity<CreditCardResponseDto> getCreditCardById(int cardId) {
-        try {
-            CreditCardResponseDto response = creditCardService.getCreditCardById((long) cardId);
-            return ResponseEntity.ok(response); // HTTP 200 OK
-        } catch (CreditCardDoesNotExist | UserNotAuthorizedForThisCreditCard e) {
-            throw e; // Custom exceptions are handled by the GlobalExceptionHandler
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error retrieving credit card", e);
-        }
+        CreditCardResponseDto response = creditCardService.getCreditCardById((long) cardId);
+        return ResponseEntity.ok(response); // HTTP 200 OK
     }
 
     @Override
     public ResponseEntity<CreditCardResponseDto> updateCreditCard(int cardId, CreditCardRequestDto creditCardRequestDto) {
-        try {
-            CreditCardResponseDto response = creditCardService.updateCreditCard((long) cardId, creditCardRequestDto);
-            return ResponseEntity.ok(response); // HTTP 200 OK
-        } catch (CreditCardDoesNotExist | UserNotAuthorizedForThisCreditCard e) {
-            throw e; // Custom exceptions are handled by the GlobalExceptionHandler
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error updating credit card", e);
-        }
+        CreditCardResponseDto response = creditCardService.updateCreditCard((long) cardId, creditCardRequestDto);
+        return ResponseEntity.ok(response); // HTTP 200 OK
     }
 
     @Override
     public ResponseEntity<Void> deleteCreditCard(int cardId) {
-        try {
-            creditCardService.deleteCreditCard((long) cardId);
-            return ResponseEntity.noContent().build(); // HTTP 204 No Content
-        } catch (CreditCardDoesNotExist | UserNotAuthorizedForThisCreditCard e) {
-            throw e; // Custom exceptions are handled by the GlobalExceptionHandler
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error deleting credit card", e);
-        }
+
+        creditCardService.deleteCreditCard((long) cardId);
+        return ResponseEntity.noContent().build(); // HTTP 204 No Content
     }
 
     @Override
     public ResponseEntity<List<CreditCardResponseDto>> getAllCards() {
-        try {
-            List<CreditCardResponseDto> response = creditCardService.getAllCardsOfCurrentUser();
-            return ResponseEntity.ok(response); // HTTP 200 OK
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error retrieving credit cards", e);
-        }
+        List<CreditCardResponseDto> response = creditCardService.getAllCardsOfCurrentUser();
+        return ResponseEntity.ok(response); // HTTP 200 OK
     }
 }
