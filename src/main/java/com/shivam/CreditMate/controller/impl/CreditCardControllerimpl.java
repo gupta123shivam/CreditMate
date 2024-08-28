@@ -23,19 +23,19 @@ public class CreditCardControllerimpl implements CreditCardController {
     }
 
     @Override
-    public ResponseEntity<CreditCardResponseDto> createCreditCard() {
+    public ResponseEntity<CreditCardResponseDto> applyForCreditCard() {
         CreditCardResponseDto response = creditCardService.createCreditCard();
         return ResponseEntity.status(HttpStatus.CREATED).body(response); // HTTP 201 Created
     }
 
     @Override
-    public ResponseEntity<CreditCardResponseDto> getCreditCardById(Long cardId) {
+    public ResponseEntity<CreditCardResponseDto> getCreditCardDetails(Long cardId) {
         CreditCardResponseDto response = creditCardService.getCreditCardById(cardId);
         return ResponseEntity.ok(response); // HTTP 200 OK
     }
 
     @Override
-    public ResponseEntity<CreditCardResponseDto> updateCreditCard(Long cardId, CreditCardRequestDto creditCardRequestDto) {
+    public ResponseEntity<CreditCardResponseDto> updateCreditCardDetails(Long cardId, CreditCardRequestDto creditCardRequestDto) {
         CreditCardResponseDto response = creditCardService.updateCreditCard(cardId, creditCardRequestDto);
         return ResponseEntity.ok(response); // HTTP 200 OK
     }
@@ -47,7 +47,7 @@ public class CreditCardControllerimpl implements CreditCardController {
     }
 
     @Override
-    public ResponseEntity<List<CreditCardResponseDto>> getAllCards() {
+    public ResponseEntity<List<CreditCardResponseDto>> getAllCreditCards() {
         List<CreditCardResponseDto> response = creditCardService.getAllCardsOfCurrentUser();
         return ResponseEntity.ok(response); // HTTP 200 OK
     }

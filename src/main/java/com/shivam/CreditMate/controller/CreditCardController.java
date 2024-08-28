@@ -13,16 +13,16 @@ import java.util.List;
 public interface CreditCardController {
 
     @PreAuthorize("isAuthenticated() and hasRole('OWNER')")
-    @PostMapping
-    ResponseEntity<CreditCardResponseDto> createCreditCard();
+    @PostMapping("/apply")
+    ResponseEntity<CreditCardResponseDto> applyForCreditCard();
 
     @PreAuthorize("isAuthenticated() and hasRole('OWNER')")
     @GetMapping("/{cardId}")
-    ResponseEntity<CreditCardResponseDto> getCreditCardById(@PathVariable("cardId") Long cardId);
+    ResponseEntity<CreditCardResponseDto> getCreditCardDetails(@PathVariable("cardId") Long cardId);
 
     @PreAuthorize("isAuthenticated() and hasRole('OWNER')")
     @PutMapping("/{cardId}")
-    ResponseEntity<CreditCardResponseDto> updateCreditCard(
+    ResponseEntity<CreditCardResponseDto> updateCreditCardDetails(
             @PathVariable("cardId") Long cardId,
             @NotNull @RequestBody CreditCardRequestDto creditCardRequestDto);
 
@@ -31,8 +31,8 @@ public interface CreditCardController {
     ResponseEntity<Void> deleteCreditCard(@PathVariable("cardId") Long cardId);
 
     @PreAuthorize("isAuthenticated() and hasRole('OWNER')")
-    @GetMapping("/all")
-    ResponseEntity<List<CreditCardResponseDto>> getAllCards();
+    @GetMapping("/all-cards")
+    ResponseEntity<List<CreditCardResponseDto>> getAllCreditCards();
 
     @PreAuthorize("isAuthenticated() and hasRole('OWNER')")
     @PutMapping("/{cardId}/activate")
