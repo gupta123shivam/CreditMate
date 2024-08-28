@@ -6,11 +6,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/health")
 public class HealthControllerImpl implements HealthController {
     @Override
-    @GetMapping
-    public String checkHealth(){
+    public String checkHealth() {
         return "Service is UP and running.";
     }
 }

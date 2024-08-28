@@ -24,7 +24,6 @@ import java.security.Principal;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/auth")
 public class AuthConrollerImpl implements AuthController {
     private final AuthService authService;
 
@@ -34,7 +33,6 @@ public class AuthConrollerImpl implements AuthController {
     }
 
     @Override
-    @PostMapping("/register")
     public ResponseEntity<RegisterResponseDto> registerUser(@Valid @RequestBody RegisterRequestDto registerRequestDto) {
         log.info("Entering register user: " + registerRequestDto);
         try {
@@ -73,9 +71,7 @@ public class AuthConrollerImpl implements AuthController {
         }
     }
 
-    @PreAuthorize("isAuthenticated()")
     @Override
-    @GetMapping("/logout")
     public ResponseEntity<String> logoutUser(@AuthenticationPrincipal User user) {
         return ResponseEntity.ok(authService.logoutUser(user));
     }
