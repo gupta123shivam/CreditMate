@@ -57,16 +57,17 @@ public class CreditCardServiceImpl implements CreditCardService {
     }
 
     @Override
-    public CreditCardResponseDto getCreditCardByUuid(String uuid) {
-        CreditCard creditCard = findByUuidAndUserUuid(uuid);
+    public CreditCardResponseDto getCreditCardById(Long cardId) {
+        CreditCard creditCard = findByIdAndCurrentUser(cardId);
         return this.mapToResponseDto(creditCard);
     }
 
-    // TODO for now we are making it simple and expecting all the fields for update. later on this
+    // TODO
+    // for now we are making it simple and expecting all the fields for update. later on this
     // can be refined to update individual field only
     @Override
-    public CreditCardResponseDto updateCreditCard(String uuid, CreditCardRequestDto creditCardRequestDto) {
-        CreditCard creditCard = findByUuidAndUserUuid(uuid);
+    public CreditCardResponseDto updateCreditCard(Long cardId, CreditCardRequestDto creditCardRequestDto) {
+        CreditCard creditCard = findByIdAndCurrentUser(cardId);
 
         creditCard.setCurrentBalance(creditCardRequestDto.getCurrentBalance());
         creditCard.setStatus(CreditCardStatus.valueOf(creditCardRequestDto.getStatus()));
@@ -79,8 +80,8 @@ public class CreditCardServiceImpl implements CreditCardService {
     }
 
     @Override
-    public void deleteCreditCard(String uuid) {
-        CreditCard creditCard = findByUuidAndUserUuid(uuid);
+    public void deleteCreditCard(Long cardId) {
+        CreditCard creditCard = findByIdAndCurrentUser(cardId);
         creditCardRepository.delete(creditCard);
     }
 
@@ -95,8 +96,8 @@ public class CreditCardServiceImpl implements CreditCardService {
     }
 
     // checking is current user is authorized to perform action or not
-    CreditCard findByUuidAndUserUuid(String uuid) {
-        CreditCard creditCard = creditCardRepository.findByUuid(uuid)
+    CreditCard findByIdAndCurrentUser(Long cardId) {
+        CreditCard creditCard = creditCardRepository.findById(cardId)
                 .orElseThrow(CreditCardDoesNotExist::new);
         if (!creditCard.getUserUuid().equals(UserUtil.getLoggedInUser().getUuid()))
             throw new UserNotAuthorizedForThisCreditCard();
@@ -105,7 +106,6 @@ public class CreditCardServiceImpl implements CreditCardService {
 
     // Helper method to map entity to DTO
     CreditCardResponseDto mapToResponseDto(CreditCard creditCard) {
-        CreditCardResponseDto creditCardResponseDto = creditCardMapper.creditCardToCreditCardResponseDto(creditCard);
-        return creditCardResponseDto;
+        return creditCardMapper.creditCardToCreditCardResponseDto(creditCard);
     }
 }

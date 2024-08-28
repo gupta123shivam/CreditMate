@@ -29,9 +29,9 @@ public class CreditCardControllerimpl implements CreditCardController {
     }
 
     @Override
-    public ResponseEntity<CreditCardResponseDto> getCreditCardById(String uuid) {
+    public ResponseEntity<CreditCardResponseDto> getCreditCardById(int cardId) {
         try {
-            CreditCardResponseDto response = creditCardService.getCreditCardByUuid(uuid);
+            CreditCardResponseDto response = creditCardService.getCreditCardById((long) cardId);
             return ResponseEntity.ok(response); // HTTP 200 OK
         } catch (CreditCardDoesNotExist | UserNotAuthorizedForThisCreditCard e) {
             throw e; // Custom exceptions are handled by the GlobalExceptionHandler
@@ -41,9 +41,9 @@ public class CreditCardControllerimpl implements CreditCardController {
     }
 
     @Override
-    public ResponseEntity<CreditCardResponseDto> updateCreditCard(String uuid, CreditCardRequestDto creditCardRequestDto) {
+    public ResponseEntity<CreditCardResponseDto> updateCreditCard(int cardId, CreditCardRequestDto creditCardRequestDto) {
         try {
-            CreditCardResponseDto response = creditCardService.updateCreditCard(uuid, creditCardRequestDto);
+            CreditCardResponseDto response = creditCardService.updateCreditCard((long) cardId, creditCardRequestDto);
             return ResponseEntity.ok(response); // HTTP 200 OK
         } catch (CreditCardDoesNotExist | UserNotAuthorizedForThisCreditCard e) {
             throw e; // Custom exceptions are handled by the GlobalExceptionHandler
@@ -53,9 +53,9 @@ public class CreditCardControllerimpl implements CreditCardController {
     }
 
     @Override
-    public ResponseEntity<Void> deleteCreditCard(String uuid) {
+    public ResponseEntity<Void> deleteCreditCard(int cardId) {
         try {
-            creditCardService.deleteCreditCard(uuid);
+            creditCardService.deleteCreditCard((long) cardId);
             return ResponseEntity.noContent().build(); // HTTP 204 No Content
         } catch (CreditCardDoesNotExist | UserNotAuthorizedForThisCreditCard e) {
             throw e; // Custom exceptions are handled by the GlobalExceptionHandler

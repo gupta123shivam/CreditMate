@@ -9,11 +9,11 @@ public interface CreditCardService {
 
     CreditCardResponseDto createCreditCard();
 
-    CreditCardResponseDto getCreditCardByUuid(String uuid);
+    CreditCardResponseDto getCreditCardById(Long cardId);
 
-    CreditCardResponseDto updateCreditCard(String uuid, CreditCardRequestDto creditCardRequestDto);
+    CreditCardResponseDto updateCreditCard(Long cardId, CreditCardRequestDto creditCardRequestDto);
 
-    void deleteCreditCard(String uuid);
+    void deleteCreditCard(Long cardId);
 
     List<CreditCardResponseDto> getAllCardsOfCurrentUser();
 }

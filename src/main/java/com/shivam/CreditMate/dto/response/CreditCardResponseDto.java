@@ -9,6 +9,7 @@ import lombok.Setter;
 @Setter
 @Builder
 public class CreditCardResponseDto {
+    private long id;
     private String cardNumber;
     private String uuid;
     private UserDetailsDto user;
