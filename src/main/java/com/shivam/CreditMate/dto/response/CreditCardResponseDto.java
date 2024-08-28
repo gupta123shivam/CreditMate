@@ -10,6 +10,7 @@ import lombok.Setter;
 @Builder
 public class CreditCardResponseDto {
     private String cardNumber;
+    private String uuid;
     private UserDetailsDto user;
     private String userUuid;
     private Double creditLimit;

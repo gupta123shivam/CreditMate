@@ -1,14 +1,14 @@
 package com.shivam.CreditMate.exception;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class ErrorResponse {
     private int status;
     private String errorCode;

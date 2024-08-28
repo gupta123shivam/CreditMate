@@ -3,10 +3,7 @@ package com.shivam.CreditMate.model;
 import com.shivam.CreditMate.enums.CreditCardStatus;
 import com.shivam.CreditMate.enums.TransactionRight;
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -16,6 +13,8 @@ import java.util.UUID;
 @Getter
 @Setter
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class CreditCard {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

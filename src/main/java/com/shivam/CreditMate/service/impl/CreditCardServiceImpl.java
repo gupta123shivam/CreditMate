@@ -106,7 +106,6 @@ public class CreditCardServiceImpl implements CreditCardService {
     // Helper method to map entity to DTO
     CreditCardResponseDto mapToResponseDto(CreditCard creditCard) {
         CreditCardResponseDto creditCardResponseDto = creditCardMapper.creditCardToCreditCardResponseDto(creditCard);
-        creditCardResponseDto.setUser(userMapper.userToUserDetailsDto(UserUtil.getLoggedInUser()));
         return creditCardResponseDto;
     }
 }

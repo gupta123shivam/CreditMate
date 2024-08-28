@@ -8,7 +8,8 @@ public class CreditCardUtil {
     // later on can be fetched from an API
     public static Double generateCreditLimit() {
         // Generates a random double between 10.0 (inclusive) and 100.0 (inclusive)
-        return 10.0 + (100.1) * new Random().nextDouble();
+        double limit = 10.0 + (100.1) * new Random().nextDouble();
+        return Math.round(limit * 100) * 1.0 / 100; // make limit up to 2 decimal places
     }
 
     // Method to generate a credit card number with a given prefix

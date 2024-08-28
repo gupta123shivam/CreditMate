@@ -15,6 +15,8 @@ public interface CreditCardController {
     @PostMapping
     ResponseEntity<CreditCardResponseDto> createCreditCard();
 
+    // TODO maybe we can change this to integer id based on DB id, and
+    //  later on check if userUuid of this card is matching current authenticated user uuid
     @GetMapping("/{uuid}")
     ResponseEntity<CreditCardResponseDto> getCreditCardById(@NotBlank @PathVariable("uuid") String uuid);
 
