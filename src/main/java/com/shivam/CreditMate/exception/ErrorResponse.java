@@ -1,24 +1,27 @@
 package com.shivam.CreditMate.exception;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
-@Setter
+@Builder
 public class ErrorResponse {
     private int status;
-    private String code;
+    private String errorCode;
     private String message;
-    private List<String> errors;
+    private List<String> details;
+    private LocalDateTime timestamp;
 
     // Constructors
-    public ErrorResponse(int status, ErrorCode errorCode, List<String> errors) {
+    public ErrorResponse(int status, ErrorCode errorCode, List<String> details) {
         this.status = status;
-        this.code = errorCode.getCode();
+        this.errorCode = errorCode.getCode();
         this.message = errorCode.getMessage();
-        this.errors = errors;
+        this.details = details;
     }
 
     public ErrorResponse(int status, ErrorCode errorCode) {

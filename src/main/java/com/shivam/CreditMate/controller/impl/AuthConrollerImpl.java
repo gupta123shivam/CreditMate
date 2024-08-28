@@ -76,7 +76,7 @@ public class AuthConrollerImpl implements AuthController {
     @PreAuthorize("isAuthenticated()")
     @Override
     @GetMapping("/logout")
-    public ResponseEntity<String> logoutUser(@AuthenticationPrincipal User userDetails) {
-        return ResponseEntity.ok(authService.logoutUser(userDetails));
+    public ResponseEntity<String> logoutUser(@AuthenticationPrincipal User user) {
+        return ResponseEntity.ok(authService.logoutUser(user));
     }
 }

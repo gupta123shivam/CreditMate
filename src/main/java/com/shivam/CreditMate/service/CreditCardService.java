@@ -1,18 +1,19 @@
 package com.shivam.CreditMate.service;
 
-import com.shivam.CreditMate.dto.request.CreditCardDto;
-import com.shivam.CreditMate.model.CreditCard;
+import com.shivam.CreditMate.dto.request.CreditCardRequestDto;
+import com.shivam.CreditMate.dto.response.CreditCardResponseDto;
 
 import java.util.List;
 
 public interface CreditCardService {
-    CreditCard createCreditCard(CreditCardDto creditCardDto);
 
-    CreditCard updateCreditCard(Long id, CreditCardDto creditCardDto);
+    CreditCardResponseDto createCreditCard();
 
-    CreditCard getCreditCardById(Long id);
+    CreditCardResponseDto getCreditCardByUuid(String uuid);
 
-    List<CreditCard> getCreditCardsByUserId(Long userId);
+    CreditCardResponseDto updateCreditCard(String uuid, CreditCardRequestDto creditCardRequestDto);
 
-    void deleteCreditCard(Long id);
+    void deleteCreditCard(String uuid);
+
+    List<CreditCardResponseDto> getAllCardsOfCurrentUser();
 }

@@ -5,10 +5,12 @@ import com.shivam.CreditMate.enums.Role;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -25,13 +27,14 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;  // Auto-generated Long primary key
 
-    private String uuid;  // Separate UUID for unique business identifier
+    @Column(name = "uuid", nullable = false, unique = true)
+    private String uuid;// Separate UUID for unique business identifier
 
     @Column(name = "full_name")
     private String fullname;
 
     @JsonIgnore
-    @Column(name = "password")
+    @Column(name = "password", nullable = false)
     private String password;
 
     @Column(name = "email", unique = true, length = 100, nullable = false)
@@ -41,7 +44,7 @@ public class User implements UserDetails {
     private String username;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "role")
+    @Column(name = "role", nullable = false)
     private Role role;
 
     @Column(name = "created_at", updatable = false)
@@ -49,6 +52,9 @@ public class User implements UserDetails {
 
     @Column(name = "logged_in")
     private boolean loggedIn;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CreditCard> creditCards = Collections.emptyList(); // Initialize to prevent NPE
 
     // Automatically set UUID when the entity is first persisted
     @PrePersist
@@ -62,12 +68,7 @@ public class User implements UserDetails {
     // Override methods from UserDetails for Spring Security
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new GrantedAuthority() {
-            @Override
-            public String getAuthority() {
-                return role.toString();
-            }
-        });
+        return Collections.singletonList(new SimpleGrantedAuthority(role.name()));
     }
 
     @Override
