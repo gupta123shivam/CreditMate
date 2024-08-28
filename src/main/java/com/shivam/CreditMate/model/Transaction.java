@@ -27,8 +27,12 @@ public class Transaction {
     @Column(name = "card_uuid", nullable = false, updatable = false)
     private String creditCardUuid;
 
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "credit_card_id", nullable = false, updatable = false)
     private CreditCard creditCard;
+
+    @Column(name = "card_number", nullable = false, updatable = false)
+    private String cardNumber;
 
     @Column(name = "amount", nullable = false, updatable = false)
     private double amount;

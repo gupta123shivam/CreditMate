@@ -6,6 +6,8 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -50,6 +52,9 @@ public class CreditCard {
 
     @Column
     private boolean activated;
+
+    @OneToMany(mappedBy = "creditCard", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Transaction> transactions = Collections.emptyList();
 
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;

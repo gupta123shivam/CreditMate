@@ -19,6 +19,6 @@ public interface TransactionController {
     @GetMapping("/card/{cardNumber}")
     ResponseEntity<List<TransactionResponseDto>> getTransactionsByCardNumber(@PathVariable String cardNumber);
 
-    @GetMapping
-    ResponseEntity<List<TransactionResponseDto>> getAllTransactions();
+    @GetMapping("/user")
+    ResponseEntity<List<List<TransactionResponseDto>>> getAllTransactions(@RequestParam Long limit);
 }

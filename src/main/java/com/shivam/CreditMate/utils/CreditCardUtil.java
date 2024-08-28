@@ -1,9 +1,13 @@
 package com.shivam.CreditMate.utils;
 
+import com.shivam.CreditMate.exception.exceptions.CreditCardException.CreditCardDoesNotExist;
+import com.shivam.CreditMate.exception.exceptions.CreditCardException.UserNotAuthorizedForThisCreditCard;
+import com.shivam.CreditMate.model.CreditCard;
+import com.shivam.CreditMate.repository.CreditCardRepository;
+
 import java.util.Random;
 
 public class CreditCardUtil {
-
     // TODO
     // later on can be fetched from an API
     public static Double generateCreditLimit() {
@@ -51,5 +55,14 @@ public class CreditCardUtil {
         }
 
         return (sum * 9) % 10;
+    }
+
+    // checking is current user is authorized to perform action or not
+    public static CreditCard findByIdAndCurrentUser(CreditCardRepository creditCardRepository, Long cardId) {
+        CreditCard creditCard = creditCardRepository.findById(cardId)
+                .orElseThrow(CreditCardDoesNotExist::new);
+        if (!creditCard.getUserUuid().equals(UserUtil.getLoggedInUser().getUuid()))
+            throw new UserNotAuthorizedForThisCreditCard();
+        else return creditCard;
     }
 }

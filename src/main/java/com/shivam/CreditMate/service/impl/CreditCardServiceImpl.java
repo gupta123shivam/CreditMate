@@ -4,8 +4,6 @@ import com.shivam.CreditMate.dto.request.CreditCardRequestDto;
 import com.shivam.CreditMate.dto.response.CreditCardResponseDto;
 import com.shivam.CreditMate.enums.CreditCardStatus;
 import com.shivam.CreditMate.enums.TransactionRight;
-import com.shivam.CreditMate.exception.exceptions.CreditCardException.CreditCardDoesNotExist;
-import com.shivam.CreditMate.exception.exceptions.CreditCardException.UserNotAuthorizedForThisCreditCard;
 import com.shivam.CreditMate.mapper.CreditCardMapper;
 import com.shivam.CreditMate.mapper.UserMapper;
 import com.shivam.CreditMate.model.CreditCard;
@@ -59,7 +57,7 @@ public class CreditCardServiceImpl implements CreditCardService {
 
     @Override
     public CreditCardResponseDto getCreditCardById(Long cardId) {
-        CreditCard creditCard = findByIdAndCurrentUser(cardId);
+        CreditCard creditCard = CreditCardUtil.findByIdAndCurrentUser(creditCardRepository, cardId);
         return this.mapToResponseDto(creditCard);
     }
 
@@ -68,7 +66,7 @@ public class CreditCardServiceImpl implements CreditCardService {
     // can be refined to update individual field only
     @Override
     public CreditCardResponseDto updateCreditCard(Long cardId, CreditCardRequestDto creditCardRequestDto) {
-        CreditCard creditCard = findByIdAndCurrentUser(cardId);
+        CreditCard creditCard = CreditCardUtil.findByIdAndCurrentUser(creditCardRepository, cardId);
 
         creditCard.setCurrentBalance(creditCardRequestDto.getCurrentBalance());
         creditCard.setStatus(CreditCardStatus.valueOf(creditCardRequestDto.getStatus()));
@@ -82,7 +80,7 @@ public class CreditCardServiceImpl implements CreditCardService {
 
     @Override
     public void deleteCreditCard(Long cardId) {
-        CreditCard creditCard = findByIdAndCurrentUser(cardId);
+        CreditCard creditCard = CreditCardUtil.findByIdAndCurrentUser(creditCardRepository, cardId);
         creditCardRepository.delete(creditCard);
     }
 
@@ -98,25 +96,16 @@ public class CreditCardServiceImpl implements CreditCardService {
 
     @Override
     public void activateCard(Long cardId) {
-        CreditCard creditCard = findByIdAndCurrentUser(cardId);
+        CreditCard creditCard = CreditCardUtil.findByIdAndCurrentUser(creditCardRepository, cardId);
         creditCard.setActivated(true);
         creditCardRepository.save(creditCard);
     }
 
     @Override
     public void deactivateCard(Long cardId) {
-        CreditCard creditCard = findByIdAndCurrentUser(cardId);
+        CreditCard creditCard = CreditCardUtil.findByIdAndCurrentUser(creditCardRepository, cardId);
         creditCard.setActivated(false);
         creditCardRepository.save(creditCard);
-    }
-
-    // checking is current user is authorized to perform action or not
-    CreditCard findByIdAndCurrentUser(Long cardId) {
-        CreditCard creditCard = creditCardRepository.findById(cardId)
-                .orElseThrow(CreditCardDoesNotExist::new);
-        if (!creditCard.getUserUuid().equals(UserUtil.getLoggedInUser().getUuid()))
-            throw new UserNotAuthorizedForThisCreditCard();
-        else return creditCard;
     }
 
     // Helper method to map entity to DTO

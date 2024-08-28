@@ -18,4 +18,13 @@ public class CreditCardException {
             super(message);
         }
     }
+
+    public static class CreditCardWithCardNumberDoesNotExist extends RuntimeException {
+        public CreditCardWithCardNumberDoesNotExist() {
+        }
+
+        public CreditCardWithCardNumberDoesNotExist(String message) {
+            super(message);
+        }
+    }
 }

@@ -5,6 +5,7 @@ import com.shivam.CreditMate.exception.exceptions.AuthException.InvalidCredentia
 import com.shivam.CreditMate.exception.exceptions.AuthException.UserNotFoundException;
 import com.shivam.CreditMate.exception.exceptions.CreditCardException.CreditCardDoesNotExist;
 import com.shivam.CreditMate.exception.exceptions.CreditCardException.UserNotAuthorizedForThisCreditCard;
+import com.shivam.CreditMate.exception.exceptions.CustomException;
 import com.shivam.CreditMate.exception.exceptions.UserException.InvalidUserUpdateException;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +20,8 @@ import java.util.stream.Collectors;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
+
+    // TODO convert all exception to CustomException
 
     @ExceptionHandler(EmailAlreadyExistsException.class)
     public ResponseEntity<ErrorResponse> handleEmailAlreadyExistsException(EmailAlreadyExistsException ex) {
@@ -80,6 +83,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(InvalidUserUpdateException.class)
     public ResponseEntity<ErrorResponse> handleInvalidUserUpdateException(InvalidUserUpdateException ex) {
         return buildErrorResponse(AppErrorCodes.ERR_5001, ex.getMessage());
+    }
+
+    @ExceptionHandler(CustomException.class)
+    public ResponseEntity<ErrorResponse> handleCustomException(CustomException ex) {
+        return buildErrorResponse(ex.getError(), ex.getCaughtException().getMessage());
     }
 
     // Helper method to build error response
