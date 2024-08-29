@@ -15,16 +15,18 @@ import com.shivam.CreditMate.repository.TransactionRepository;
 import com.shivam.CreditMate.service.TransactionService;
 import com.shivam.CreditMate.utils.UserUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.shivam.CreditMate.utils.CreditCardUtil.getCreditCardByCardNumber;
 
+@Service
 public class TransactionServiceImpl implements TransactionService {
 
     @Autowired
-    TransactionMapper transactionMapper;
+    private TransactionMapper transactionMapper;
     @Autowired
     private TransactionRepository transactionRepository;
     @Autowired
@@ -32,30 +34,30 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     public TransactionResponseDto doTransaction(TransactionRequestDto input) {
+        // Retrieve credit card by card number
         CreditCard creditCard = getCreditCardByCardNumber(creditCardRepository, input.getCardNumber());
 
+        // Create and build the transaction
         Transaction transaction = Transaction.builder()
                 .cardNumber(creditCard.getCardNumber())
                 .creditCard(creditCard)
                 .amount(input.getAmount())
                 .transactionType(TransactionType.valueOf(input.getTransactionType()))
                 .description(input.getDescription())
-                .transactionCategory(TransactionCategory.DEFAULT)
+                .transactionCategory(input.getTransactionCategory().isBlank() ? TransactionCategory.DEFAULT : TransactionCategory.valueOf(input.getTransactionCategory()))
                 .build();
-
-        if (!input.getTransactionCategory().isBlank())
-            transaction.setTransactionCategory(TransactionCategory.valueOf(input.getTransactionCategory()));
 
         // Handle business logic for credit and debit
         if ("DEBIT".equals(input.getTransactionType())) {
             if (creditCard.getCurrentBalance() < input.getAmount()) {
-                throw new CustomException(AppErrorCodes.ERR_6001);
+                throw new CustomException(AppErrorCodes.ERR_6001); // Insufficient balance
             }
             creditCard.setCurrentBalance(creditCard.getCurrentBalance() - input.getAmount());
         } else if ("CREDIT".equals(input.getTransactionType())) {
             creditCard.setCurrentBalance(creditCard.getCurrentBalance() + input.getAmount());
         }
 
+        // Save updated credit card and transaction
         creditCardRepository.save(creditCard);
         Transaction savedTransaction = transactionRepository.save(transaction);
 
@@ -64,31 +66,33 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     public TransactionResponseDto getTransactionById(Long id) {
-        Transaction transaction = transactionRepository.findById(id).orElseThrow(() -> new CustomException(AppErrorCodes.ERR_6002));
-        getCreditCardByCardNumber(creditCardRepository, transaction.getCardNumber()); // for checking if current user has access to this transaction or not
+        // Retrieve transaction by ID and verify access
+        Transaction transaction = transactionRepository.findById(id)
+                .orElseThrow(() -> new CustomException(AppErrorCodes.ERR_6002)); // Transaction not found
+        getCreditCardByCardNumber(creditCardRepository, transaction.getCardNumber()); // Verify user access
         return transactionMapper.transactionToTransactionResponseDto(transaction);
     }
 
     @Override
     public List<TransactionResponseDto> getTransactionsByCardNumber(String cardNumber) {
+        // Retrieve transactions for a specific card number
         CreditCard creditCard = getCreditCardByCardNumber(creditCardRepository, cardNumber);
         List<Transaction> transactions = creditCard.getTransactions();
         return transactions.stream()
-                .map(t -> transactionMapper.transactionToTransactionResponseDto(t))
+                .map(transactionMapper::transactionToTransactionResponseDto)
                 .collect(Collectors.toList());
     }
 
     @Override
     public List<List<TransactionResponseDto>> getAllTransactions(Long limit) {
-        if (limit <= 0) limit = 10L;
+        // Retrieve all transactions for the current user with optional limit
+        if (limit <= 0) limit = 10L; // Default limit
 
-        User currentuser = UserUtil.getLoggedInUser();
-        List<CreditCard> creditCards = currentuser.getCreditCards();
-        List<List<TransactionResponseDto>> listOfTransactions = creditCards
-                .stream()
+        User currentUser = UserUtil.getLoggedInUser();
+        List<CreditCard> creditCards = currentUser.getCreditCards();
+        return creditCards.stream()
                 .limit(limit)
                 .map(card -> getTransactionsByCardNumber(card.getCardNumber()))
-                .toList();
-        return listOfTransactions;
+                .collect(Collectors.toList());
     }
 }

@@ -46,24 +46,23 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public RegisterResponseDto registerUser(RegisterRequestDto input) {
-        log.info("Entering registerUser from authService" + input);
-        // Check if this email already exists or not
+        log.info("Entering registerUser from authService: {}", input);
+
+        // Check if the email already exists
         if (userRepository.existsByEmail(input.getEmail())) {
             throw new EmailAlreadyExistsException("Email already exists");
         }
 
-        // Create a new User object
+        // Create and save new user
         User user = User.builder()
                 .fullname(input.getFullname())
                 .email(input.getEmail())
                 .password(passwordEncoder.encode(input.getPassword()))
                 .role(Role.OWNER)
                 .build();
-
-        // Save the user
         User savedUser = userRepository.save(user);
 
-        // Map saved user to RegisterResponseDto
+        // Return response DTO
         return userMapper.userToRegisterResponseDto(savedUser);
     }
 
@@ -71,25 +70,27 @@ public class AuthServiceImpl implements AuthService {
     public LoginResponseDto loginUser(LoginRequestDto input) {
         input.setUsername(input.getEmail());
         try {
-            // Check if this username already exists or not
+            // Find the user by email
             User foundUser = userRepository.findByUsername(input.getUsername())
                     .orElseThrow(() -> new UserNotFoundException("User not found."));
 
-            // Authenticate the user
+            // Authenticate user
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
                             input.getEmail(),
                             input.getPassword()
                     )
             );
-            // Mark user as logged in
+
+            // Mark user as logged in and save
             foundUser.setLoggedIn(true);
             userRepository.save(foundUser);
 
-            // If authentication is successful, generate a JWT token
+            // Generate JWT token
             User userDetails = (User) authentication.getPrincipal();
             String jwtToken = jwtUtil.generateToken(userDetails);
 
+            // Prepare and return login response
             LoginResponseDto loginResponseDto = userMapper.userToLoginResponseDto(userDetails);
             loginResponseDto.setJwtToken(jwtToken);
 
@@ -102,6 +103,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public String logoutUser(User user) {
         try {
+            // Mark user as logged out and save
             user.setLoggedIn(false);
             userRepository.save(user);
 

@@ -24,7 +24,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User findByUuid(String uuid) {
-        // TODO change from id to uuid in production
+        // Fetch user by UUID, throw exception if not found
         return userRepository
                 .findByUuid(uuid)
                 .orElseThrow(() -> new UserNotFoundException("User not found."));
@@ -32,19 +32,27 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User loadUserByEmail(String email) {
-        return userRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException("User not found."));
+        // Fetch user by email, throw exception if not found
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException("User not found."));
     }
 
     @Override
     public User loadUserByUsername(String username) {
-        return userRepository.findByUsername(username).orElseThrow(() -> new UserNotFoundException("User not found."));
+        // Fetch user by username, throw exception if not found
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new UserNotFoundException("User not found."));
     }
 
     @Override
     public User updateUserProfile(UserUpdateRequestDto userUpdateRequestDto) {
+        // Retrieve currently logged-in user
         User currentUser = UserUtil.getLoggedInUser();
+
+        // Update user details and save changes
         currentUser.setFullname(userUpdateRequestDto.getFullname());
         currentUser.setPassword(passwordEncoder.encode(userUpdateRequestDto.getPassword()));
+
         return userRepository.save(currentUser);
     }
 }

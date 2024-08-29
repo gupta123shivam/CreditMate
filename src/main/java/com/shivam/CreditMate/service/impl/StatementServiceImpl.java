@@ -44,6 +44,7 @@ public class StatementServiceImpl implements StatementService {
 
     @Override
     public StatementResponseDto generateStatement(StatementRequestDto input) {
+        // Retrieve credit card by card number
         String cardNumber = input.getCardNumber();
         LocalDate startDate = input.getStartDate();
         LocalDate endDate = input.getEndDate();
@@ -52,11 +53,10 @@ public class StatementServiceImpl implements StatementService {
         List<Transaction> transactions = transactionRepository
                 .findByCreditCardAndTransactionDateBetween(creditCard, startDate.atStartOfDay(), endDate.atTime(23, 59, 59));
 
-        // Initialize totals for credit and debit.
+        // Calculate total credits and debits
         double totalCredit = 0.0;
         double totalDebit = 0.0;
 
-        // Loop through the transactions and calculate totals.
         for (Transaction t : transactions) {
             if (t.getTransactionType() == TransactionType.CREDIT) {
                 totalCredit += t.getAmount();
@@ -65,8 +65,9 @@ public class StatementServiceImpl implements StatementService {
             }
         }
 
-        double closingBalance = totalCredit - totalDebit; // Adjust based on initial balance if needed
+        double closingBalance = totalCredit - totalDebit; // Calculate closing balance
 
+        // Create and save the statement
         Statement statement = Statement.builder()
                 .cardNumber(cardNumber)
                 .startDate(startDate)
@@ -84,6 +85,7 @@ public class StatementServiceImpl implements StatementService {
 
     @Override
     public StatementResponseDto getStatementByUuid(String statementUuid) {
+        // Fetch statement by UUID and check user authorization
         Statement statement = statementRepository.findByStatementUuid(statementUuid)
                 .orElseThrow(() -> new CustomException(AppErrorCodes.ERR_7001));
         String currentUserUuid = UserUtil.getLoggedInUser().getUuid();
@@ -96,12 +98,14 @@ public class StatementServiceImpl implements StatementService {
 
     @Override
     public StatementResponseDto getLatestStatement(String cardNumber) {
+        // Retrieve and return the latest statement for the card
         CreditCard creditCard = CreditCardUtil.getCreditCardByCardNumber(creditCardRepository, cardNumber);
         List<Statement> statements = creditCard.getStatements();
         if (statements.isEmpty()) throw new CustomException(AppErrorCodes.ERR_7003);
         return mapToResponseDto(statements.get(0));
     }
 
+    // Convert Statement entity to StatementResponseDto
     private StatementResponseDto mapToResponseDto(Statement statement) {
         List<TransactionResponseDto> transactionDtos = statement.getTransactions().stream()
                 .map(transactionMapper::transactionToTransactionResponseDto)

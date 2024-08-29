@@ -11,40 +11,44 @@ import com.shivam.CreditMate.repository.CreditCardRepository;
 import java.util.Random;
 
 public final class CreditCardUtil {
-    // TODO
-    // later on can be fetched from an API
 
     /**
-     * Generate credit limit for the card
+     * Generate a random credit limit between 10.0 and 100.0, rounded to 2 decimal places.
+     *
+     * @return the generated credit limit.
      */
     public static Double generateCreditLimit() {
-        // Generates a random double between 10.0 (inclusive) and 100.0 (inclusive)
-        double limit = 10.0 + (100.1) * new Random().nextDouble();
-        return Math.round(limit * 100) * 1.0 / 100; // make limit up to 2 decimal places
+        double limit = 10.0 + (100.0 * new Random().nextDouble());
+        return Math.round(limit * 100) / 100.0;
     }
 
     /**
-     * Method to generate a credit card number
+     * Generate a valid credit card number using the Luhn algorithm.
+     *
+     * @return the generated credit card number.
      */
     public static String generateCreditCardNumber() {
         StringBuilder cardNumber = new StringBuilder(16);
-        cardNumber.append(4);
+        cardNumber.append(4);  // Starting digit for Visa cards
 
-        // Generate random digits to fill the card number to 15 digits (excluding the last check digit)
         Random random = new Random();
         while (cardNumber.length() < 15) {
-            int digit = random.nextInt(10);
-            cardNumber.append(digit);
+            cardNumber.append(random.nextInt(10));
         }
 
-        // Calculate and append the Luhn check digit
+        // Append the Luhn check digit
         int checkDigit = calculateLuhnCheckDigit(cardNumber.toString());
         cardNumber.append(checkDigit);
 
         return cardNumber.toString();
     }
 
-    // Method to calculate the Luhn check digit
+    /**
+     * Calculate the Luhn check digit for a given number.
+     *
+     * @param number the number to calculate the check digit for.
+     * @return the Luhn check digit.
+     */
     public static int calculateLuhnCheckDigit(String number) {
         int sum = 0;
         boolean alternate = true;
@@ -52,14 +56,10 @@ public final class CreditCardUtil {
         // Process digits from right to left
         for (int i = number.length() - 1; i >= 0; i--) {
             int n = Character.getNumericValue(number.charAt(i));
-
             if (alternate) {
                 n *= 2;
-                if (n > 9) {
-                    n -= 9;
-                }
+                if (n > 9) n -= 9;
             }
-
             sum += n;
             alternate = !alternate;
         }
@@ -68,18 +68,27 @@ public final class CreditCardUtil {
     }
 
     /**
-     * checking is current user is authorized to perform action or not
+     * Find a credit card by ID and ensure the current user is authorized to access it.
+     *
+     * @param creditCardRepository the repository to query.
+     * @param cardId               the ID of the credit card.
+     * @return the credit card if found and authorized.
      */
     public static CreditCard findByIdAndCurrentUser(CreditCardRepository creditCardRepository, Long cardId) {
         CreditCard creditCard = creditCardRepository.findById(cardId)
                 .orElseThrow(CreditCardDoesNotExist::new);
-        if (!creditCard.getUserUuid().equals(UserUtil.getLoggedInUser().getUuid()))
+        if (!creditCard.getUserUuid().equals(UserUtil.getLoggedInUser().getUuid())) {
             throw new UserNotAuthorizedForThisCreditCard();
-        else return creditCard;
+        }
+        return creditCard;
     }
 
     /**
-     * check if cardNumber belongs to current authenticated user and return the card
+     * Get a credit card by its number and verify that it belongs to the current user.
+     *
+     * @param creditCardRepository the repository to query.
+     * @param cardNumber           the credit card number.
+     * @return the credit card if found and belongs to the user.
      */
     public static CreditCard getCreditCardByCardNumber(CreditCardRepository creditCardRepository, String cardNumber) {
         User currentUser = UserUtil.getLoggedInUser();
@@ -92,6 +101,7 @@ public final class CreditCardUtil {
         // make sure current user is owner of this card
         if (!currentUser.getUuid().equals(creditCard.getUserUuid()))
             throw new CustomException(AppErrorCodes.ERR_3002);
+
         return creditCard;
     }
 }

@@ -35,39 +35,37 @@ public class CreditCardServiceImpl implements CreditCardService {
 
     @Override
     public CreditCardResponseDto createCreditCard() {
-        // Retrieve the logged-in user
+        // Get the logged-in user
         User user = UserUtil.getLoggedInUser();
         double creditLimit = CreditCardUtil.generateCreditLimit();
         String cardNumber = CreditCardUtil.generateCreditCardNumber();
 
-        // Create a new credit card instance
+        // Create and save a new credit card
         CreditCard creditCard = CreditCard.builder()
-                .cardNumber(cardNumber)  // Implement this method to generate a valid card number
-                .user(user)  // Set the user
+                .cardNumber(cardNumber)
+                .user(user)
                 .userUuid(user.getUuid())
-                .creditLimit(creditLimit)  // Set the random credit limit
-                .currentBalance(creditLimit)  // Initial balance is zero
-                .status(CreditCardStatus.ACTIVE)  // Set default status
-                .transactionRight(TransactionRight.VIEW_ONLY)  // Default transaction right
-                .activated(false)  // Set default activated state
+                .creditLimit(creditLimit)
+                .currentBalance(creditLimit)
+                .status(CreditCardStatus.ACTIVE)
+                .transactionRight(TransactionRight.VIEW_ONLY)
+                .activated(false)
                 .build();
 
-        // Save the credit card to the database
         CreditCard savedCreditCard = creditCardRepository.save(creditCard);
         return this.mapToResponseDto(savedCreditCard);
     }
 
     @Override
     public CreditCardResponseDto getCreditCardById(Long cardId) {
+        // Retrieve and map credit card by ID
         CreditCard creditCard = CreditCardUtil.findByIdAndCurrentUser(creditCardRepository, cardId);
         return this.mapToResponseDto(creditCard);
     }
 
-    // TODO
-    // for now we are making it simple and expecting all the fields for update. later on this
-    // can be refined to update individual field only
     @Override
     public CreditCardResponseDto updateCreditCard(Long cardId, CreditCardRequestDto creditCardRequestDto) {
+        // Find and update the credit card
         CreditCard creditCard = CreditCardUtil.findByIdAndCurrentUser(creditCardRepository, cardId);
 
         creditCard.setCurrentBalance(creditCardRequestDto.getCurrentBalance());
@@ -76,12 +74,12 @@ public class CreditCardServiceImpl implements CreditCardService {
         creditCard.setActivated(creditCardRequestDto.isActivated());
 
         CreditCard updatedCreditCard = creditCardRepository.save(creditCard);
-
         return mapToResponseDto(updatedCreditCard);
     }
 
     @Override
     public void deleteCreditCard(Long cardId) {
+        // Validate and delete the credit card
         CreditCard creditCard = CreditCardUtil.findByIdAndCurrentUser(creditCardRepository, cardId);
         if (creditCard.getCurrentBalance() < 0) throw new CustomException(AppErrorCodes.ERR_3003);
         creditCardRepository.delete(creditCard);
@@ -89,6 +87,7 @@ public class CreditCardServiceImpl implements CreditCardService {
 
     @Override
     public List<CreditCardResponseDto> getAllCardsOfCurrentUser() {
+        // Retrieve and map all credit cards of the current user
         User loggedInUser = UserUtil.getLoggedInUser();
         Long currentUserId = loggedInUser.getId();
         List<CreditCard> creditCardList = creditCardRepository.findByUserId(currentUserId);
@@ -99,6 +98,7 @@ public class CreditCardServiceImpl implements CreditCardService {
 
     @Override
     public void activateCard(Long cardId) {
+        // Activate the credit card
         CreditCard creditCard = CreditCardUtil.findByIdAndCurrentUser(creditCardRepository, cardId);
         creditCard.setActivated(true);
         creditCardRepository.save(creditCard);
@@ -106,13 +106,14 @@ public class CreditCardServiceImpl implements CreditCardService {
 
     @Override
     public void deactivateCard(Long cardId) {
+        // Deactivate the credit card
         CreditCard creditCard = CreditCardUtil.findByIdAndCurrentUser(creditCardRepository, cardId);
         creditCard.setActivated(false);
         creditCardRepository.save(creditCard);
     }
 
-    // Helper method to map entity to DTO
-    CreditCardResponseDto mapToResponseDto(CreditCard creditCard) {
+    // Convert CreditCard entity to CreditCardResponseDto
+    private CreditCardResponseDto mapToResponseDto(CreditCard creditCard) {
         return creditCardMapper.creditCardToCreditCardResponseDto(creditCard);
     }
 }
