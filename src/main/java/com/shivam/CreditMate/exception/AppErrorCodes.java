@@ -27,7 +27,12 @@ public enum AppErrorCodes implements ErrorCode {
 
     // Transaction error
     ERR_6001("Insufficient Balance", HttpStatus.BAD_REQUEST),
-    ERR_6002("Transaction with given Id not found", HttpStatus.BAD_REQUEST);
+    ERR_6002("Transaction with given Id not found", HttpStatus.BAD_REQUEST),
+
+    // Statement Error
+    ERR_7001("Statement with provided Uuid was not found", HttpStatus.NOT_FOUND),
+    ERR_7002("User is not authorized to perform action on this statement.", HttpStatus.UNAUTHORIZED),
+    ERR_7003("No statement exist yet. Please generate statement first.", HttpStatus.BAD_REQUEST);
 
     private final String message;
     private final HttpStatus httpStatus;

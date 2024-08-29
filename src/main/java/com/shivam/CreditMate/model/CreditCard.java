@@ -53,8 +53,11 @@ public class CreditCard {
     @Column
     private boolean activated;
 
-    @OneToMany(mappedBy = "creditCard", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "creditCard", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Transaction> transactions = Collections.emptyList();
+
+    @OneToMany(mappedBy = "creditCard", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<Statement> statements = Collections.emptyList();
 
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;

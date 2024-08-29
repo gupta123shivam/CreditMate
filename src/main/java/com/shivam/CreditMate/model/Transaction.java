@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
-@Table(name = "credit-card-transactions")
+@Table(name = "transactions")
 
 @Getter
 @Setter
@@ -23,9 +23,6 @@ public class Transaction {
 
     @Column(name = "transaction_uuid", nullable = false, updatable = false)
     private String transactionUuid;
-
-    @Column(name = "card_uuid", nullable = false, updatable = false)
-    private String creditCardUuid;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "credit_card_id", nullable = false, updatable = false)

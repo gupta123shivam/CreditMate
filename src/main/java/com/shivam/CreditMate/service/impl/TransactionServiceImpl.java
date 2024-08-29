@@ -19,6 +19,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.shivam.CreditMate.utils.CreditCardUtil.getCreditCardByCardNumber;
+
 public class TransactionServiceImpl implements TransactionService {
 
     @Autowired
@@ -30,7 +32,7 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     public TransactionResponseDto doTransaction(TransactionRequestDto input) {
-        CreditCard creditCard = getCreditCard(input.getCardNumber());
+        CreditCard creditCard = getCreditCardByCardNumber(creditCardRepository, input.getCardNumber());
 
         Transaction transaction = Transaction.builder()
                 .cardNumber(creditCard.getCardNumber())
@@ -63,13 +65,13 @@ public class TransactionServiceImpl implements TransactionService {
     @Override
     public TransactionResponseDto getTransactionById(Long id) {
         Transaction transaction = transactionRepository.findById(id).orElseThrow(() -> new CustomException(AppErrorCodes.ERR_6002));
-        getCreditCard(transaction.getCardNumber()); // for checking if current user has access to this transaction or not
+        getCreditCardByCardNumber(creditCardRepository, transaction.getCardNumber()); // for checking if current user has access to this transaction or not
         return transactionMapper.transactionToTransactionResponseDto(transaction);
     }
 
     @Override
     public List<TransactionResponseDto> getTransactionsByCardNumber(String cardNumber) {
-        CreditCard creditCard = getCreditCard(cardNumber);
+        CreditCard creditCard = getCreditCardByCardNumber(creditCardRepository, cardNumber);
         List<Transaction> transactions = creditCard.getTransactions();
         return transactions.stream()
                 .map(t -> transactionMapper.transactionToTransactionResponseDto(t))
@@ -88,20 +90,5 @@ public class TransactionServiceImpl implements TransactionService {
                 .map(card -> getTransactionsByCardNumber(card.getCardNumber()))
                 .toList();
         return listOfTransactions;
-    }
-
-    // check if cardNumber belongs to current authenticated user and return the card
-    private CreditCard getCreditCard(String cardNumber) {
-        User currentUser = UserUtil.getLoggedInUser();
-
-        // make sure that card attached to transaction is still in system
-        CreditCard creditCard = creditCardRepository
-                .findByCardNumber(cardNumber)
-                .orElseThrow(() -> new CustomException(AppErrorCodes.ERR_3001));
-
-        // make sure current user is owner of this card
-        if (!currentUser.getUuid().equals(creditCard.getUserUuid()))
-            throw new CustomException(AppErrorCodes.ERR_3002);
-        return creditCard;
     }
 }
