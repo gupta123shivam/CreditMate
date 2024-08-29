@@ -12,8 +12,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import static org.springframework.boot.autoconfigure.security.servlet.PathRequest.toH2Console;
-
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
@@ -23,6 +21,11 @@ public class SecurityConfig {
     @Autowired
     private UserDetailsService userDetailsService;
 
+    /**
+     * Bean definition for SecurityFilterChain.
+     * This bean manages security filter in the application and
+     * adds Jwt Authentication filter.
+     */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http

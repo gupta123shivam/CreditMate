@@ -10,13 +10,29 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+/**
+ * Controller interface for managing user profiles.
+ * Provides endpoints for retrieving and updating user profile information.
+ */
 @RequestMapping("/api/users")
 public interface UserController {
-    // Authenticated user only access
+
+    /**
+     * Retrieves the profile of the currently authenticated user.
+     * Accessible only by authenticated users with the OWNER role.
+     *
+     * @return a ResponseEntity containing the user profile details
+     */
     @PreAuthorize("isAuthenticated() and hasRole('OWNER')")
     @GetMapping("/profile")
     public ResponseEntity<UserDetailsDto> getUserProfile();
 
+    /**
+     * Updates the profile of the currently authenticated user.
+     *
+     * @param userUpdateRequestDto the updated user profile information
+     * @return a ResponseEntity containing the updated user profile details
+     */
     @PutMapping("/profile")
     public ResponseEntity<UserDetailsDto> updateUserProfile(@Valid @RequestBody UserUpdateRequestDto userUpdateRequestDto);
 }

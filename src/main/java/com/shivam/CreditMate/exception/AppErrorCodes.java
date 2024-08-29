@@ -19,6 +19,7 @@ public enum AppErrorCodes implements ErrorCode {
     //Credit Card Exception
     ERR_3001("Credit Card does not exist.", HttpStatus.NOT_FOUND),
     ERR_3002("User is not authorized to perform action on this credit card.", HttpStatus.UNAUTHORIZED),
+    ERR_3003("Credit card has negative balance. Please pay ur dues.", HttpStatus.CONFLICT),
 
     // Exceptions
     ERR_4001("Something bad happened. please try later", HttpStatus.INTERNAL_SERVER_ERROR),

@@ -4,6 +4,8 @@ import com.shivam.CreditMate.dto.request.CreditCardRequestDto;
 import com.shivam.CreditMate.dto.response.CreditCardResponseDto;
 import com.shivam.CreditMate.enums.CreditCardStatus;
 import com.shivam.CreditMate.enums.TransactionRight;
+import com.shivam.CreditMate.exception.AppErrorCodes;
+import com.shivam.CreditMate.exception.exceptions.CustomException;
 import com.shivam.CreditMate.mapper.CreditCardMapper;
 import com.shivam.CreditMate.mapper.UserMapper;
 import com.shivam.CreditMate.model.CreditCard;
@@ -81,6 +83,7 @@ public class CreditCardServiceImpl implements CreditCardService {
     @Override
     public void deleteCreditCard(Long cardId) {
         CreditCard creditCard = CreditCardUtil.findByIdAndCurrentUser(creditCardRepository, cardId);
+        if (creditCard.getCurrentBalance() < 0) throw new CustomException(AppErrorCodes.ERR_3003);
         creditCardRepository.delete(creditCard);
     }
 
