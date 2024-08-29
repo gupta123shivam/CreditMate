@@ -1,5 +1,6 @@
 package com.shivam.CreditMate.service.impl;
 
+import com.shivam.CreditMate.dto.request.StatementRequestDto;
 import com.shivam.CreditMate.dto.response.StatementResponseDto;
 import com.shivam.CreditMate.dto.response.TransactionResponseDto;
 import com.shivam.CreditMate.enums.TransactionType;
@@ -42,7 +43,11 @@ public class StatementServiceImpl implements StatementService {
     }
 
     @Override
-    public StatementResponseDto generateStatement(String cardNumber, LocalDate startDate, LocalDate endDate) {
+    public StatementResponseDto generateStatement(StatementRequestDto input) {
+        String cardNumber = input.getCardNumber();
+        LocalDate startDate = input.getStartDate();
+        LocalDate endDate = input.getEndDate();
+
         CreditCard creditCard = CreditCardUtil.getCreditCardByCardNumber(creditCardRepository, cardNumber);
         List<Transaction> transactions = transactionRepository
                 .findByCreditCardAndTransactionDateBetween(creditCard, startDate.atStartOfDay(), endDate.atTime(23, 59, 59));

@@ -1,12 +1,13 @@
 package com.shivam.CreditMate.service;
 
+import com.shivam.CreditMate.dto.request.StatementRequestDto;
 import com.shivam.CreditMate.dto.response.StatementResponseDto;
 
 import java.time.LocalDate;
 
 public interface StatementService {
 
-    StatementResponseDto generateStatement(String cardNumber, LocalDate startDate, LocalDate endDate);
+    StatementResponseDto generateStatement(StatementRequestDto statementRequestDto);
 
     StatementResponseDto getStatementByUuid(String statementUuid);
 
