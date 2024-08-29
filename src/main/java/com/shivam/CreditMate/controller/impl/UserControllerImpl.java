@@ -12,30 +12,51 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * Implementation of {@link UserController} for managing user-related operations.
+ */
 @RestController
 public class UserControllerImpl implements UserController {
-    @Autowired
-    UserService userService;
 
     @Autowired
-    UserMapper userMapper;
+    private UserService userService;
 
     @Autowired
-    UserRepository userRepository;
+    private UserMapper userMapper;
 
+    @Autowired
+    private UserRepository userRepository;
+
+    /**
+     * Retrieves the profile of the currently logged-in user.
+     *
+     * @return a {@link ResponseEntity} containing the user profile details and HTTP status 200 (OK)
+     */
     @Override
     public ResponseEntity<UserDetailsDto> getUserProfile() {
-        // Fetch user details using the UserService
+        // Fetch the currently logged-in user
         User currentUser = UserUtil.getLoggedInUser();
+
+        // Convert the User entity to UserDetailsDto
         UserDetailsDto userDetails = userMapper.userToUserDetailsDto(currentUser);
 
         return ResponseEntity.ok(userDetails);
     }
 
+    /**
+     * Updates the profile of the currently logged-in user based on the provided request details.
+     *
+     * @param userUpdateRequestDto the request containing updated user profile details
+     * @return a {@link ResponseEntity} containing the updated user profile details and HTTP status 200 (OK)
+     */
     @Override
     public ResponseEntity<UserDetailsDto> updateUserProfile(UserUpdateRequestDto userUpdateRequestDto) {
+        // Update the user profile using the service
         User updatedUser = userService.updateUserProfile(userUpdateRequestDto);
+
+        // Convert the updated User entity to UserDetailsDto
         UserDetailsDto userDetailsDto = userMapper.userToUserDetailsDto(updatedUser);
+
         return ResponseEntity.ok(userDetailsDto);
     }
 }
