@@ -20,7 +20,9 @@ public enum AppErrorCodes implements ErrorCode {
     ERR_3001("Credit Card does not exist.", HttpStatus.NOT_FOUND),
     ERR_3002("User is not authorized to perform action on this credit card.", HttpStatus.UNAUTHORIZED),
 
+    // Exceptions
     ERR_4001("Something bad happened. please try later", HttpStatus.INTERNAL_SERVER_ERROR),
+    ERR_4002("Something bad happened at Runtime. please try later", HttpStatus.INTERNAL_SERVER_ERROR),
 
     // User error
     ERR_5001("Invalid User profile update values", HttpStatus.BAD_REQUEST),
@@ -32,7 +34,9 @@ public enum AppErrorCodes implements ErrorCode {
     // Statement Error
     ERR_7001("Statement with provided Uuid was not found", HttpStatus.NOT_FOUND),
     ERR_7002("User is not authorized to perform action on this statement.", HttpStatus.UNAUTHORIZED),
-    ERR_7003("No statement exist yet. Please generate statement first.", HttpStatus.BAD_REQUEST);
+    ERR_7003("No statement exist yet. Please generate statement first.", HttpStatus.BAD_REQUEST),
+    ERR_7004("Could not serialize transactions list to JSON", HttpStatus.INTERNAL_SERVER_ERROR),
+    ERR_7005("Could not deserialize transactions JSON to list", HttpStatus.INTERNAL_SERVER_ERROR);
 
     private final String message;
     private final HttpStatus httpStatus;

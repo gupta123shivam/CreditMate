@@ -18,14 +18,12 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CreditCard {
+    @Column(name = "uuid", unique = true, nullable = false)
+    private final String uuid = UUID.randomUUID().toString();
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
-
-    @Column(name = "uuid", unique = true, nullable = false)
-    private String uuid;
-
     @Column(name = "card_number", nullable = false, unique = true)
     private String cardNumber;
 
@@ -64,7 +62,6 @@ public class CreditCard {
 
     @PrePersist
     void onCreate() {
-        this.uuid = UUID.randomUUID().toString();
         this.createdAt = LocalDateTime.now();
     }
 }

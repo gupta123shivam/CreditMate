@@ -23,13 +23,11 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class User implements UserDetails {
+    @Column(name = "uuid", nullable = false, unique = true)
+    private final String uuid = UUID.randomUUID().toString();// Separate UUID for unique business identifier
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;  // Auto-generated Long primary key
-
-    @Column(name = "uuid", nullable = false, unique = true)
-    private String uuid;// Separate UUID for unique business identifier
-
     @Column(name = "full_name")
     private String fullname;
 
@@ -59,7 +57,6 @@ public class User implements UserDetails {
     // Automatically set UUID when the entity is first persisted
     @PrePersist
     void onCreate() {
-        this.uuid = UUID.randomUUID().toString();
         this.createdAt = LocalDateTime.now();
         this.username = this.email;
         this.loggedIn = false;

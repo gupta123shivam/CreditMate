@@ -1,12 +1,15 @@
 package com.shivam.CreditMate.model;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.shivam.CreditMate.exception.AppErrorCodes;
+import com.shivam.CreditMate.exception.exceptions.CustomException;
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Table(name = "statements")
@@ -14,14 +17,16 @@ import java.util.List;
 @Getter
 @Setter
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Statement {
 
+    @Column(unique = true, nullable = false, name = "statement_uuid")
+    private final String statementUuid = UUID.randomUUID().toString();
+    private final ObjectMapper objectMapper = new ObjectMapper();
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column(unique = true, nullable = false, name = "statement_uuid")
-    private String statementUuid;
 
     @Column(nullable = false, name = "card_number")
     private String cardNumber;
@@ -36,17 +41,35 @@ public class Statement {
     @Column(nullable = false, name = "end_date")
     private LocalDate endDate;
 
-    @Column(nullable = false, name = "transactions")
-    private List<Transaction> transactions;
+    @Lob
+    @Column(nullable = false, name = "transactions_json")
+    private String transactionsJson;
 
     private Double totalCredit;
     private Double totalDebit;
     private Double closingBalance;
 
+    @Transient
+    private List<Transaction> transactions;
+
     @PrePersist
-    public void generateStatementUuid() {
-        if (statementUuid == null) {
-            statementUuid = java.util.UUID.randomUUID().toString();
+    @PreUpdate
+    public void serializeTransactions() {
+        try {
+            this.transactionsJson = objectMapper.writeValueAsString(transactions);
+        } catch (JsonProcessingException e) {
+            throw new CustomException(AppErrorCodes.ERR_7004, e);
+        }
+    }
+
+    @PostLoad
+    public void deSerializeTransactions() {
+        try {
+            this.transactions = objectMapper.readValue(
+                    transactionsJson,
+                    objectMapper.getTypeFactory().constructCollectionType(List.class, Transaction.class));
+        } catch (JsonProcessingException e) {
+            throw new CustomException(AppErrorCodes.ERR_7005, e);
         }
     }
 }

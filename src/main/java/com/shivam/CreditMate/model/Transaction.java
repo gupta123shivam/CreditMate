@@ -17,13 +17,11 @@ import java.util.UUID;
 @AllArgsConstructor
 @Builder
 public class Transaction {
+    @Column(name = "transaction_uuid", nullable = false, updatable = false)
+    private final String transactionUuid = UUID.randomUUID().toString();
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column(name = "transaction_uuid", nullable = false, updatable = false)
-    private String transactionUuid;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "credit_card_id", nullable = false, updatable = false)
     private CreditCard creditCard;
@@ -48,7 +46,6 @@ public class Transaction {
 
     @PrePersist
     void onCreate() {
-        this.transactionUuid = UUID.randomUUID().toString();
         this.transactionDate = LocalDateTime.now();
     }
 }

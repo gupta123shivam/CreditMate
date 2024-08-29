@@ -75,11 +75,6 @@ public class GlobalExceptionHandler {
         return buildErrorResponse(AppErrorCodes.ERR_1005, errors);
     }
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> handleGeneralException(Exception ex) {
-        return buildErrorResponse(AppErrorCodes.ERR_4001, ex.getMessage());
-    }
-
     @ExceptionHandler(InvalidUserUpdateException.class)
     public ResponseEntity<ErrorResponse> handleInvalidUserUpdateException(InvalidUserUpdateException ex) {
         return buildErrorResponse(AppErrorCodes.ERR_5001, ex.getMessage());
@@ -88,6 +83,16 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(CustomException.class)
     public ResponseEntity<ErrorResponse> handleCustomException(CustomException ex) {
         return buildErrorResponse(ex.getError(), ex.getCaughtException().getMessage());
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<ErrorResponse> handleRuntimeException(RuntimeException ex) {
+        return buildErrorResponse(AppErrorCodes.ERR_4002, ex.getMessage());
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponse> handleGeneralException(Exception ex) {
+        return buildErrorResponse(AppErrorCodes.ERR_4001, ex.getMessage());
     }
 
     // Helper method to build error response
