@@ -4,6 +4,7 @@ import com.shivam.CreditMate.dto.request.TransactionRequestDto;
 import com.shivam.CreditMate.dto.response.TransactionResponseDto;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -12,6 +13,7 @@ import java.util.List;
  * Controller interface for managing credit card transactions.
  * Provides endpoints for creating and retrieving transactions.
  */
+@PreAuthorize("isAuthenticated() and hasRole('OWNER')")
 @RequestMapping("/api/transactions")
 public interface TransactionController {
 

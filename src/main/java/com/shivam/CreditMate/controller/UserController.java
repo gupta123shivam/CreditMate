@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * Controller interface for managing user profiles.
  * Provides endpoints for retrieving and updating user profile information.
  */
+@PreAuthorize("isAuthenticated() and hasRole('OWNER')")
 @RequestMapping("/api/users")
 public interface UserController {
 
@@ -23,7 +24,6 @@ public interface UserController {
      *
      * @return a ResponseEntity containing the user profile details
      */
-    @PreAuthorize("isAuthenticated() and hasRole('OWNER')")
     @GetMapping("/profile")
     public ResponseEntity<UserDetailsDto> getUserProfile();
 

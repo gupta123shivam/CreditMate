@@ -13,6 +13,7 @@ import java.util.List;
  * Controller interface for managing credit card operations.
  * Provides endpoints for applying, viewing, updating, deleting, and managing credit cards.
  */
+@PreAuthorize("isAuthenticated() and hasRole('OWNER')")
 @RequestMapping("/api/credit-cards")
 public interface CreditCardController {
 
@@ -22,7 +23,6 @@ public interface CreditCardController {
      *
      * @return a ResponseEntity containing the credit card response details
      */
-    @PreAuthorize("isAuthenticated() and hasRole('OWNER')")
     @PostMapping("/apply")
     ResponseEntity<CreditCardResponseDto> applyForCreditCard();
 
@@ -33,7 +33,6 @@ public interface CreditCardController {
      * @param cardId the (Long id as in DB) ID of the credit card
      * @return a ResponseEntity containing the credit card response details
      */
-    @PreAuthorize("isAuthenticated() and hasRole('OWNER')")
     @GetMapping("/{cardId}")
     ResponseEntity<CreditCardResponseDto> getCreditCardDetails(@PathVariable("cardId") Long cardId);
 
@@ -45,7 +44,6 @@ public interface CreditCardController {
      * @param creditCardRequestDto the updated credit card details
      * @return a ResponseEntity containing the updated credit card response details
      */
-    @PreAuthorize("isAuthenticated() and hasRole('OWNER')")
     @PutMapping("/{cardId}")
     ResponseEntity<CreditCardResponseDto> updateCreditCardDetails(
             @PathVariable("cardId") Long cardId,
@@ -58,7 +56,6 @@ public interface CreditCardController {
      * @param cardId the ID of the credit card to be deleted
      * @return a ResponseEntity with no content
      */
-    @PreAuthorize("isAuthenticated() and hasRole('OWNER')")
     @DeleteMapping("/{cardId}")
     ResponseEntity<Void> deleteCreditCard(@PathVariable("cardId") Long cardId);
 
@@ -68,7 +65,6 @@ public interface CreditCardController {
      *
      * @return a ResponseEntity containing a list of credit card response details
      */
-    @PreAuthorize("isAuthenticated() and hasRole('OWNER')")
     @GetMapping("/all-cards")
     ResponseEntity<List<CreditCardResponseDto>> getAllCreditCards();
 
@@ -79,7 +75,6 @@ public interface CreditCardController {
      * @param cardId the ID of the credit card to be activated
      * @return a ResponseEntity with no content
      */
-    @PreAuthorize("isAuthenticated() and hasRole('OWNER')")
     @PutMapping("/{cardId}/activate")
     public ResponseEntity<Void> activateCard(@PathVariable Long cardId);
 
@@ -90,7 +85,6 @@ public interface CreditCardController {
      * @param cardId the ID of the credit card to be deactivated
      * @return a ResponseEntity with no content
      */
-    @PreAuthorize("isAuthenticated() and hasRole('OWNER')")
     @PutMapping("/{cardId}/deactivate")
     public ResponseEntity<Void> deactivateCard(@PathVariable Long cardId);
 }

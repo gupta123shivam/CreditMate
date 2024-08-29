@@ -4,12 +4,14 @@ import com.shivam.CreditMate.dto.request.StatementRequestDto;
 import com.shivam.CreditMate.dto.response.StatementResponseDto;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 /**
  * Controller interface for managing credit card statements.
  * Provides endpoints for generating and retrieving statements.
  */
+@PreAuthorize("isAuthenticated() and hasRole('OWNER')")
 @RequestMapping("/api/statements")
 public interface StatementController {
 

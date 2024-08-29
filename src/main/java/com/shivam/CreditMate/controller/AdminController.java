@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * Controller interface for administrative operations.
  * All methods in this controller are accessible only to users with ADMIN role.
  */
+@PreAuthorize("isAuthenticated() and hasRole('ADMIN')")
 @RequestMapping("/api/admin")
 public interface AdminController {
 
@@ -21,7 +22,6 @@ public interface AdminController {
      *
      * @return a test string for ADMIN users
      */
-    @PreAuthorize("isAuthenticated() and hasRole('ADMIN')")
     @GetMapping("/test")
     String testAdmin();
 
@@ -32,7 +32,6 @@ public interface AdminController {
      * @param uuid the UUID of the user
      * @return a ResponseEntity containing user details
      */
-    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/user/{_uuid}")
     public ResponseEntity<UserDetailsDto> getUser(@NotBlank @PathVariable("_uuid") String uuid);
 }
