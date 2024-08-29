@@ -10,7 +10,7 @@ import com.shivam.CreditMate.repository.CreditCardRepository;
 
 import java.util.Random;
 
-public class CreditCardUtil {
+public final class CreditCardUtil {
     // TODO
     // later on can be fetched from an API
 

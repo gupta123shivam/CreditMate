@@ -6,7 +6,7 @@ import com.shivam.CreditMate.model.User;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-public class UserUtil {
+public final class UserUtil {
     /**
      * Converts a given string to a corresponding Role enum.
      *

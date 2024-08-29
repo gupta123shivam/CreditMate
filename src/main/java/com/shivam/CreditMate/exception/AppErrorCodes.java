@@ -36,7 +36,12 @@ public enum AppErrorCodes implements ErrorCode {
     ERR_7002("User is not authorized to perform action on this statement.", HttpStatus.UNAUTHORIZED),
     ERR_7003("No statement exist yet. Please generate statement first.", HttpStatus.BAD_REQUEST),
     ERR_7004("Could not serialize transactions list to JSON", HttpStatus.INTERNAL_SERVER_ERROR),
-    ERR_7005("Could not deserialize transactions JSON to list", HttpStatus.INTERNAL_SERVER_ERROR);
+    ERR_7005("Could not deserialize transactions JSON to list", HttpStatus.INTERNAL_SERVER_ERROR),
+
+    // Encryption Error
+    ERR_8001("Error encrypting card number", HttpStatus.INTERNAL_SERVER_ERROR),
+    ERR_8002("Error decrypting card number", HttpStatus.INTERNAL_SERVER_ERROR);
+
 
     private final String message;
     private final HttpStatus httpStatus;

@@ -2,6 +2,7 @@ package com.shivam.CreditMate.model;
 
 import com.shivam.CreditMate.enums.CreditCardStatus;
 import com.shivam.CreditMate.enums.TransactionRight;
+import com.shivam.CreditMate.utils.Encrypt;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -24,8 +25,14 @@ public class CreditCard {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
-    @Column(name = "card_number", nullable = false, unique = true)
+
+    @Convert(converter = Encrypt.class)
+    @Column(name = "card_number", nullable = false)
     private String cardNumber;
+
+    // Field to store the encrypted card number
+//    @Column(name = "encrypted_card_number", nullable = false)
+//    private String encryptedCardNumber;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
@@ -64,4 +71,23 @@ public class CreditCard {
     void onCreate() {
         this.createdAt = LocalDateTime.now();
     }
+
+//    @PrePersist
+//    @PreUpdate
+//    private void encryptSensitiveData() {
+//        try {
+//            this.encryptedCardNumber = EncryptionUtil.encrypt(this.cardNumber);
+//        } catch (Exception e) {
+//            throw new CustomException(AppErrorCodes.ERR_8001, e);
+//        }
+//    }
+
+//    @PostLoad
+//    private void decryptSensitiveData() {
+//        try {
+//            this.cardNumber = EncryptionUtil.decrypt(this.encryptedCardNumber);
+//        } catch (Exception e) {
+//            throw new CustomException(AppErrorCodes.ERR_8002, e);
+//        }
+//    }
 }
