@@ -59,8 +59,8 @@ public class TransactionControllerImpl implements TransactionController {
      * @return a {@link ResponseEntity} containing the list of transactions and HTTP status 200 (OK)
      */
     @Override
-    public ResponseEntity<List<TransactionResponseDto>> getTransactionsByCardNumber(String cardNumber) {
-        List<TransactionResponseDto> transactions = transactionService.getTransactionsByCardNumber(cardNumber);
+    public ResponseEntity<List<TransactionResponseDto>> getTransactionsByCardNumber(String cardNumber, Long limit) {
+        List<TransactionResponseDto> transactions = transactionService.getTransactionsByCardNumber(cardNumber, limit);
         return ResponseEntity.ok(transactions);
     }
 

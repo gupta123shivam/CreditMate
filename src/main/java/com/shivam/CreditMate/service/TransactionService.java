@@ -10,7 +10,7 @@ public interface TransactionService {
 
     TransactionResponseDto getTransactionById(Long id);
 
-    List<TransactionResponseDto> getTransactionsByCardNumber(String cardNumber);
+    List<TransactionResponseDto> getTransactionsByCardNumber(String cardNumber, Long limit);
 
     List<List<TransactionResponseDto>> getAllTransactions(Long limit);
 }

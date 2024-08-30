@@ -12,8 +12,10 @@ import com.shivam.CreditMate.model.Transaction;
 import com.shivam.CreditMate.model.User;
 import com.shivam.CreditMate.repository.CreditCardRepository;
 import com.shivam.CreditMate.repository.TransactionRepository;
+import com.shivam.CreditMate.repository.UserRepository;
 import com.shivam.CreditMate.service.TransactionService;
 import com.shivam.CreditMate.utils.UserUtil;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +27,8 @@ import static com.shivam.CreditMate.utils.CreditCardUtil.getCreditCardByCardNumb
 @Service
 public class TransactionServiceImpl implements TransactionService {
 
+    @Autowired
+    UserRepository userRepository;
     @Autowired
     private TransactionMapper transactionMapper;
     @Autowired
@@ -74,25 +78,29 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public List<TransactionResponseDto> getTransactionsByCardNumber(String cardNumber) {
+    public List<TransactionResponseDto> getTransactionsByCardNumber(String cardNumber, Long limit) {
         // Retrieve transactions for a specific card number
         CreditCard creditCard = getCreditCardByCardNumber(creditCardRepository, cardNumber);
         List<Transaction> transactions = creditCard.getTransactions();
         return transactions.stream()
+                .limit(limit)
                 .map(transactionMapper::transactionToTransactionResponseDto)
                 .collect(Collectors.toList());
     }
 
     @Override
     public List<List<TransactionResponseDto>> getAllTransactions(Long limit) {
-        // Retrieve all transactions for the current user with optional limit
-        if (limit <= 0) limit = 10L; // Default limit
-
         User currentUser = UserUtil.getLoggedInUser();
-        List<CreditCard> creditCards = currentUser.getCreditCards();
+        List<CreditCard> creditCards = getCreditCardsForUser(currentUser.getId());
         return creditCards.stream()
-                .limit(limit)
-                .map(card -> getTransactionsByCardNumber(card.getCardNumber()))
+                .map(card -> getTransactionsByCardNumber(card.getCardNumber(), limit))
                 .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public List<CreditCard> getCreditCardsForUser(Long userId) {
+        User currentUser = userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(AppErrorCodes.ERR_2002));
+        return currentUser.getCreditCards();
     }
 }

@@ -42,7 +42,7 @@ public interface TransactionController {
      * @return a ResponseEntity containing a list of transaction details
      */
     @GetMapping("/card/{cardNumber}")
-    ResponseEntity<List<TransactionResponseDto>> getTransactionsByCardNumber(@PathVariable String cardNumber);
+    ResponseEntity<List<TransactionResponseDto>> getTransactionsByCardNumber(@PathVariable String cardNumber, @RequestParam(defaultValue = "10") Long limit);
 
     /**
      * Retrieves all transactions for the authenticated user with a limit.
@@ -51,5 +51,5 @@ public interface TransactionController {
      * @return a ResponseEntity containing a list of lists of transaction details
      */
     @GetMapping("/user")
-    ResponseEntity<List<List<TransactionResponseDto>>> getAllTransactions(@RequestParam Long limit);
+    ResponseEntity<List<List<TransactionResponseDto>>> getAllTransactions(@RequestParam(defaultValue = "10") Long limit);
 }
