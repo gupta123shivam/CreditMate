@@ -17,9 +17,9 @@ public final class UserUtil {
     public static Role convertStringToRole(String roleString) {
         try {
             return Role.valueOf(roleString.toUpperCase()); // Convert to uppercase for case-insensitivity
-        } catch (IllegalArgumentException | NullPointerException e) {
+        } catch (Exception e) {
             // Handle invalid role string or null value
-            throw new IllegalArgumentException("Invalid role: " + roleString);
+            throw new RuntimeException("Invalid role: " + roleString);
         }
     }
 
