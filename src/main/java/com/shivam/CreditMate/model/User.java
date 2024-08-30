@@ -23,6 +23,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class User implements UserDetails {
+    @Builder.Default
     @Column(name = "uuid", nullable = false, unique = true)
     private final String uuid = UUID.randomUUID().toString();// Separate UUID for unique business identifier
     @Id
@@ -51,12 +52,13 @@ public class User implements UserDetails {
     @Column(name = "logged_in")
     private boolean loggedIn;
 
+    @Builder.Default
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<CreditCard> creditCards = Collections.emptyList(); // Initialize to prevent NPE
 
     // Automatically set UUID when the entity is first persisted
     @PrePersist
-    void onCreate() {
+    public void onCreate() {
         this.createdAt = LocalDateTime.now();
         this.username = this.email;
         this.loggedIn = false;

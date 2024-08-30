@@ -17,6 +17,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @Builder
 public class Transaction {
+    @Builder.Default
     @Column(name = "transaction_uuid", nullable = false, updatable = false)
     private final String transactionUuid = UUID.randomUUID().toString();
     @Id
@@ -38,6 +39,7 @@ public class Transaction {
     @Column(name = "transaction_category")
     private TransactionCategory transactionCategory;
 
+    @Builder.Default
     @Column(name = "description")
     private String description = "";
 

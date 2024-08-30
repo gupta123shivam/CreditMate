@@ -103,6 +103,14 @@
             <scope>provided</scope>
         </dependency>
 
+        <!--        Testing for static methods-->
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-inline</artifactId>
+            <version>4.10.0</version>
+            <scope>test</scope>
+        </dependency>
+
         <!-- Add JAXB API -->
         <dependency>
             <groupId>javax.xml.bind</groupId>
@@ -114,6 +122,11 @@
             <groupId>org.glassfish.jaxb</groupId>
             <artifactId>jaxb-runtime</artifactId>
             <version>2.3.1</version>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 

@@ -19,6 +19,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CreditCard {
+    @Builder.Default
     @Column(name = "uuid", unique = true, nullable = false)
     private final String uuid = UUID.randomUUID().toString();
     @Id
@@ -58,9 +59,11 @@ public class CreditCard {
     @Column
     private boolean activated;
 
+    @Builder.Default
     @OneToMany(mappedBy = "creditCard", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Transaction> transactions = Collections.emptyList();
 
+    @Builder.Default
     @OneToMany(mappedBy = "creditCard", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Statement> statements = Collections.emptyList();
 
@@ -68,7 +71,7 @@ public class CreditCard {
     private LocalDateTime createdAt;
 
     @PrePersist
-    void onCreate() {
+    public void onCreate() {
         this.createdAt = LocalDateTime.now();
     }
 

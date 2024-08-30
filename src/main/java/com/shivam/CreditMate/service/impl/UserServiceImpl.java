@@ -2,7 +2,6 @@ package com.shivam.CreditMate.service.impl;
 
 import com.shivam.CreditMate.dto.request.UserUpdateRequestDto;
 import com.shivam.CreditMate.exception.exceptions.AuthException.UserNotFoundException;
-import com.shivam.CreditMate.mapper.UserMapper;
 import com.shivam.CreditMate.model.User;
 import com.shivam.CreditMate.repository.UserRepository;
 import com.shivam.CreditMate.service.UserService;
@@ -13,14 +12,17 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class UserServiceImpl implements UserService {
-    @Autowired
+    private final
     UserRepository userRepository;
 
-    @Autowired
-    UserMapper userMapper;
+    private final
+    PasswordEncoder passwordEncoder;
 
     @Autowired
-    PasswordEncoder passwordEncoder;
+    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     @Override
     public User findByUuid(String uuid) {

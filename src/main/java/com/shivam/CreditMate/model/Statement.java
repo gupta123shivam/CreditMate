@@ -21,8 +21,11 @@ import java.util.UUID;
 @NoArgsConstructor
 public class Statement {
 
+    @Builder.Default
     @Column(unique = true, nullable = false, name = "statement_uuid")
     private final String statementUuid = UUID.randomUUID().toString();
+
+    @Builder.Default
     private final ObjectMapper objectMapper = new ObjectMapper();
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

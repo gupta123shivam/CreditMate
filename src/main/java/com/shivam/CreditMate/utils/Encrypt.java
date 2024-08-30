@@ -1,12 +1,22 @@
 package com.shivam.CreditMate.utils;
 
 import jakarta.persistence.AttributeConverter;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
 public class Encrypt implements AttributeConverter<String, String> {
+    private final EncryptionUtil encryptionUtil;
+
+    @Autowired
+    public Encrypt(EncryptionUtil encryptionUtil) {
+        this.encryptionUtil = encryptionUtil;
+    }
+
     @Override
     public String convertToDatabaseColumn(String attribute) {
         try {
-            return EncryptionUtil.encrypt(attribute);
+            return encryptionUtil.encrypt(attribute);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -15,7 +25,7 @@ public class Encrypt implements AttributeConverter<String, String> {
     @Override
     public String convertToEntityAttribute(String dbData) {
         try {
-            return EncryptionUtil.decrypt(dbData);
+            return encryptionUtil.decrypt(dbData);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

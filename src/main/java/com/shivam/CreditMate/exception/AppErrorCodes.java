@@ -41,7 +41,9 @@ public enum AppErrorCodes implements ErrorCode {
 
     // Encryption Error
     ERR_8001("Error encrypting card number", HttpStatus.INTERNAL_SERVER_ERROR),
-    ERR_8002("Error decrypting card number", HttpStatus.INTERNAL_SERVER_ERROR);
+    ERR_8002("Error decrypting card number", HttpStatus.INTERNAL_SERVER_ERROR),
+    ERR_8003("Something bad happened while encryption", HttpStatus.INTERNAL_SERVER_ERROR),
+    ERR_8004("Something bad happened while decryption", HttpStatus.INTERNAL_SERVER_ERROR);
 
 
     private final String message;
