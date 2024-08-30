@@ -1,5 +1,6 @@
 package com.shivam.CreditMate.service.impl;
 
+import com.shivam.CreditMate.dto.request.PasswordChangeDto;
 import com.shivam.CreditMate.dto.request.UserProfileUpdateRequestDto;
 import com.shivam.CreditMate.exception.AppErrorCodes;
 import com.shivam.CreditMate.exception.exceptions.CustomException;
@@ -57,4 +58,17 @@ public class UserServiceImpl implements UserService {
 
         return userRepository.save(currentUser);
     }
+
+    @Override
+    public void updatePassword(PasswordChangeDto input) {
+        // Retrieve currently logged-in user
+        User currentUser = UserUtil.getLoggedInUser();
+
+        if (currentUser.getPassword().equals(passwordEncoder.encode(input.getOldPassword())))
+            throw new CustomException(AppErrorCodes.ERR_5002);
+        currentUser.setPassword(passwordEncoder.encode(input.getNewPassword()));
+        userRepository.save(currentUser);
+    }
+
+
 }

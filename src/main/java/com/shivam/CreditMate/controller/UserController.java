@@ -1,6 +1,7 @@
 package com.shivam.CreditMate.controller;
 
 import com.shivam.CreditMate.dto.UserDetailsDto;
+import com.shivam.CreditMate.dto.request.PasswordChangeDto;
 import com.shivam.CreditMate.dto.request.UserProfileUpdateRequestDto;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -37,6 +38,6 @@ public interface UserController {
     public ResponseEntity<UserDetailsDto> updateUserProfile(@Valid @RequestBody UserProfileUpdateRequestDto userProfileUpdateRequestDto);
 
     // TODO
-//    @PutMapping("/change-password")
-//    public ResponseEntity<String> updatePassword(@RequestBody PasswordChangeDto passwordChangeDto);
+    @PutMapping("/change-password")
+    public ResponseEntity<String> updatePassword(@RequestBody PasswordChangeDto passwordChangeDto);
 }

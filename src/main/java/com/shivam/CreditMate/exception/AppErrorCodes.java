@@ -27,6 +27,7 @@ public enum AppErrorCodes implements ErrorCode {
 
     // User error
     ERR_5001("Invalid User profile update values", HttpStatus.BAD_REQUEST),
+    ERR_5002("old password is not matching", HttpStatus.BAD_REQUEST),
 
     // Transaction error
     ERR_6001("Insufficient Balance", HttpStatus.BAD_REQUEST),

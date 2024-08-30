@@ -11,7 +11,4 @@ import lombok.*;
 public class UserProfileUpdateRequestDto {
     @NotBlank(message = "Full name is mandatory")
     private String fullname;
-
-    @NotBlank(message = "Password is necessary")
-    private String password;
 }

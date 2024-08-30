@@ -2,6 +2,7 @@ package com.shivam.CreditMate.controller.impl;
 
 import com.shivam.CreditMate.controller.UserController;
 import com.shivam.CreditMate.dto.UserDetailsDto;
+import com.shivam.CreditMate.dto.request.PasswordChangeDto;
 import com.shivam.CreditMate.dto.request.UserProfileUpdateRequestDto;
 import com.shivam.CreditMate.mapper.UserMapper;
 import com.shivam.CreditMate.model.User;
@@ -60,13 +61,9 @@ public class UserControllerImpl implements UserController {
         return ResponseEntity.ok(userDetailsDto);
     }
 
-//    @Override
-//    public ResponseEntity<String> updatePassword(PasswordChangeDto passwordChangeDto) {
-//        try{
-//            userService.updatePassword(passwordChangeDto);
-//            return ResponseEntity.ok("Password changed successfully.");
-//        }catch (Exception e){
-//            return
-//        }
-//    }
+    @Override
+    public ResponseEntity<String> updatePassword(PasswordChangeDto passwordChangeDto) {
+        userService.updatePassword(passwordChangeDto);
+        return ResponseEntity.ok("Password changed successfully.");
+    }
 }
