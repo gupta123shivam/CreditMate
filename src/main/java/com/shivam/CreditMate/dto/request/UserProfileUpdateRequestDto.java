@@ -8,7 +8,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UserUpdateRequestDto {
+public class UserProfileUpdateRequestDto {
     @NotBlank(message = "Full name is mandatory")
     private String fullname;
 

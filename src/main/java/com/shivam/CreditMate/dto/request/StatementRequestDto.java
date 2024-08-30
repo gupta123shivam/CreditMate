@@ -6,8 +6,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDate;
-
 @Getter
 @Setter
 @Builder
@@ -16,8 +14,8 @@ public class StatementRequestDto {
     private String cardNumber;
 
     @NotNull
-    private LocalDate startDate;
+    private String startDate;
 
     @NotNull
-    private LocalDate endDate;
+    private String endDate;
 }

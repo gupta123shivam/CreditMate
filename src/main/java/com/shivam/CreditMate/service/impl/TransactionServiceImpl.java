@@ -51,14 +51,20 @@ public class TransactionServiceImpl implements TransactionService {
                 .transactionCategory(input.getTransactionCategory().isBlank() ? TransactionCategory.DEFAULT : TransactionCategory.valueOf(input.getTransactionCategory()))
                 .build();
 
+        double finalbalance = 0.0;
         // Handle business logic for credit and debit
         if ("DEBIT".equals(input.getTransactionType())) {
             if (creditCard.getCurrentBalance() < input.getAmount()) {
                 throw new CustomException(AppErrorCodes.ERR_6001); // Insufficient balance
             }
-            creditCard.setCurrentBalance(creditCard.getCurrentBalance() - input.getAmount());
+            finalbalance = creditCard.getCurrentBalance() - input.getAmount();
+            finalbalance = ((int) (100 * finalbalance)) / 100.0;
+            creditCard.setCurrentBalance(finalbalance);
+
         } else if ("CREDIT".equals(input.getTransactionType())) {
-            creditCard.setCurrentBalance(creditCard.getCurrentBalance() + input.getAmount());
+            finalbalance = creditCard.getCurrentBalance() + input.getAmount();
+            finalbalance = ((int) (100 * finalbalance)) / 100.0;
+            creditCard.setCurrentBalance(finalbalance);
         }
 
         // Save updated credit card and transaction

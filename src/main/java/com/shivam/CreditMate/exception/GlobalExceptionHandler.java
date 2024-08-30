@@ -90,13 +90,14 @@ public class GlobalExceptionHandler {
         return buildErrorResponse(AppErrorCodes.ERR_4002, ex.getMessage());
     }
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> handleGeneralException(Exception ex) {
-        return buildErrorResponse(AppErrorCodes.ERR_4001, ex.getMessage());
-    }
+//    @ExceptionHandler(Exception.class)
+//    public ResponseEntity<ErrorResponse> handleGeneralException(Exception ex) {
+//        return buildErrorResponse(AppErrorCodes.ERR_4001, ex.getMessage());
+//    }
 
     // Helper method to build error response
     private ResponseEntity<ErrorResponse> buildErrorResponse(AppErrorCodes errorCode, String errorDetail) {
+        if (errorDetail == null || errorDetail.isEmpty()) errorDetail = "";
         ErrorResponse errorResponse = ErrorResponse.builder()
                 .status(errorCode.getHttpStatus().value())
                 .errorCode(errorCode.getCode())

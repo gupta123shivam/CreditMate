@@ -1,7 +1,7 @@
 package com.shivam.CreditMate.controller;
 
 import com.shivam.CreditMate.dto.UserDetailsDto;
-import com.shivam.CreditMate.dto.request.UserUpdateRequestDto;
+import com.shivam.CreditMate.dto.request.UserProfileUpdateRequestDto;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -30,9 +30,13 @@ public interface UserController {
     /**
      * Updates the profile of the currently authenticated user.
      *
-     * @param userUpdateRequestDto the updated user profile information
+     * @param userProfileUpdateRequestDto the updated user profile information
      * @return a ResponseEntity containing the updated user profile details
      */
     @PutMapping("/profile")
-    public ResponseEntity<UserDetailsDto> updateUserProfile(@Valid @RequestBody UserUpdateRequestDto userUpdateRequestDto);
+    public ResponseEntity<UserDetailsDto> updateUserProfile(@Valid @RequestBody UserProfileUpdateRequestDto userProfileUpdateRequestDto);
+
+    // TODO
+//    @PutMapping("/change-password")
+//    public ResponseEntity<String> updatePassword(@RequestBody PasswordChangeDto passwordChangeDto);
 }

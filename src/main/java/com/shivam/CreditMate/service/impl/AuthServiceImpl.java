@@ -5,9 +5,8 @@ import com.shivam.CreditMate.dto.request.RegisterRequestDto;
 import com.shivam.CreditMate.dto.response.LoginResponseDto;
 import com.shivam.CreditMate.dto.response.RegisterResponseDto;
 import com.shivam.CreditMate.enums.Role;
-import com.shivam.CreditMate.exception.exceptions.AuthException.EmailAlreadyExistsException;
-import com.shivam.CreditMate.exception.exceptions.AuthException.InvalidCredentialsException;
-import com.shivam.CreditMate.exception.exceptions.AuthException.UserNotFoundException;
+import com.shivam.CreditMate.exception.AppErrorCodes;
+import com.shivam.CreditMate.exception.exceptions.CustomException;
 import com.shivam.CreditMate.mapper.UserMapper;
 import com.shivam.CreditMate.model.User;
 import com.shivam.CreditMate.repository.UserRepository;
@@ -50,7 +49,7 @@ public class AuthServiceImpl implements AuthService {
 
         // Check if the email already exists
         if (userRepository.existsByEmail(input.getEmail())) {
-            throw new EmailAlreadyExistsException("Email already exists");
+            throw new CustomException(AppErrorCodes.ERR_2001);
         }
 
         // Create and save new user
@@ -72,7 +71,7 @@ public class AuthServiceImpl implements AuthService {
         try {
             // Find the user by email
             User foundUser = userRepository.findByUsername(input.getUsername())
-                    .orElseThrow(() -> new UserNotFoundException("User not found."));
+                    .orElseThrow(() -> new CustomException(AppErrorCodes.ERR_2002));
 
             // Authenticate user
             Authentication authentication = authenticationManager.authenticate(
@@ -96,7 +95,7 @@ public class AuthServiceImpl implements AuthService {
 
             return loginResponseDto;
         } catch (AuthenticationException e) {
-            throw new InvalidCredentialsException("Invalid credentials");
+            throw new CustomException(AppErrorCodes.ERR_2003);
         }
     }
 

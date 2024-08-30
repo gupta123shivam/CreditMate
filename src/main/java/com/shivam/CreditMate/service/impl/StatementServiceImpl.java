@@ -46,8 +46,8 @@ public class StatementServiceImpl implements StatementService {
     public StatementResponseDto generateStatement(StatementRequestDto input) {
         // Retrieve credit card by card number
         String cardNumber = input.getCardNumber();
-        LocalDate startDate = input.getStartDate();
-        LocalDate endDate = input.getEndDate();
+        LocalDate startDate = LocalDate.parse(input.getStartDate());
+        LocalDate endDate = LocalDate.parse(input.getEndDate());
 
         CreditCard creditCard = CreditCardUtil.getCreditCardByCardNumber(creditCardRepository, cardNumber);
         List<Transaction> transactions = transactionRepository

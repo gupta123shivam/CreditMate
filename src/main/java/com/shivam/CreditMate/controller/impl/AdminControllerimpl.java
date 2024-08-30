@@ -2,7 +2,8 @@ package com.shivam.CreditMate.controller.impl;
 
 import com.shivam.CreditMate.controller.AdminController;
 import com.shivam.CreditMate.dto.UserDetailsDto;
-import com.shivam.CreditMate.exception.exceptions.AuthException;
+import com.shivam.CreditMate.exception.AppErrorCodes;
+import com.shivam.CreditMate.exception.exceptions.CustomException;
 import com.shivam.CreditMate.mapper.UserMapper;
 import com.shivam.CreditMate.model.User;
 import com.shivam.CreditMate.repository.UserRepository;
@@ -50,7 +51,6 @@ public class AdminControllerimpl implements AdminController {
      *
      * @param uuid the UUID of the user to retrieve
      * @return a ResponseEntity containing the user details
-     * @throws AuthException.UserNotFoundException if the user with the given UUID is not found
      */
     @Override
     public ResponseEntity<UserDetailsDto> getUser(@NotBlank @PathVariable("_uuid") String uuid) {
@@ -59,7 +59,7 @@ public class AdminControllerimpl implements AdminController {
 
         // Retrieve user details from the repository
         User user = userRepository.findById(Long.parseLong(uuid))
-                .orElseThrow(AuthException.UserNotFoundException::new);
+                .orElseThrow(() -> new CustomException(AppErrorCodes.ERR_2002));
 
         // Map the User entity to UserDetailsDto
         UserDetailsDto userDetailsDto = userMapper.userToUserDetailsDto(user);

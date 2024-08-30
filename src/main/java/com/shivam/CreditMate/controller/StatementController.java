@@ -21,7 +21,7 @@ public interface StatementController {
      * @param statementRequestDto the details required to generate the statement
      * @return a ResponseEntity containing the generated statement details
      */
-    @PostMapping("/{cardNumber}")
+    @PostMapping
     ResponseEntity<StatementResponseDto> generateStatement(@Valid @RequestBody StatementRequestDto statementRequestDto);
 
     /**

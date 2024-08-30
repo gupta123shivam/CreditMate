@@ -2,7 +2,7 @@ package com.shivam.CreditMate.controller.impl;
 
 import com.shivam.CreditMate.controller.UserController;
 import com.shivam.CreditMate.dto.UserDetailsDto;
-import com.shivam.CreditMate.dto.request.UserUpdateRequestDto;
+import com.shivam.CreditMate.dto.request.UserProfileUpdateRequestDto;
 import com.shivam.CreditMate.mapper.UserMapper;
 import com.shivam.CreditMate.model.User;
 import com.shivam.CreditMate.repository.UserRepository;
@@ -46,17 +46,27 @@ public class UserControllerImpl implements UserController {
     /**
      * Updates the profile of the currently logged-in user based on the provided request details.
      *
-     * @param userUpdateRequestDto the request containing updated user profile details
+     * @param userProfileUpdateRequestDto the request containing updated user profile details
      * @return a {@link ResponseEntity} containing the updated user profile details and HTTP status 200 (OK)
      */
     @Override
-    public ResponseEntity<UserDetailsDto> updateUserProfile(UserUpdateRequestDto userUpdateRequestDto) {
+    public ResponseEntity<UserDetailsDto> updateUserProfile(UserProfileUpdateRequestDto userProfileUpdateRequestDto) {
         // Update the user profile using the service
-        User updatedUser = userService.updateUserProfile(userUpdateRequestDto);
+        User updatedUser = userService.updateUserProfile(userProfileUpdateRequestDto);
 
         // Convert the updated User entity to UserDetailsDto
         UserDetailsDto userDetailsDto = userMapper.userToUserDetailsDto(updatedUser);
 
         return ResponseEntity.ok(userDetailsDto);
     }
+
+//    @Override
+//    public ResponseEntity<String> updatePassword(PasswordChangeDto passwordChangeDto) {
+//        try{
+//            userService.updatePassword(passwordChangeDto);
+//            return ResponseEntity.ok("Password changed successfully.");
+//        }catch (Exception e){
+//            return
+//        }
+//    }
 }

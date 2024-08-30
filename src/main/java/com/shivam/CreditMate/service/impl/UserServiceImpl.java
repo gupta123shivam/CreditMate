@@ -1,7 +1,8 @@
 package com.shivam.CreditMate.service.impl;
 
-import com.shivam.CreditMate.dto.request.UserUpdateRequestDto;
-import com.shivam.CreditMate.exception.exceptions.AuthException.UserNotFoundException;
+import com.shivam.CreditMate.dto.request.UserProfileUpdateRequestDto;
+import com.shivam.CreditMate.exception.AppErrorCodes;
+import com.shivam.CreditMate.exception.exceptions.CustomException;
 import com.shivam.CreditMate.model.User;
 import com.shivam.CreditMate.repository.UserRepository;
 import com.shivam.CreditMate.service.UserService;
@@ -29,31 +30,30 @@ public class UserServiceImpl implements UserService {
         // Fetch user by UUID, throw exception if not found
         return userRepository
                 .findByUuid(uuid)
-                .orElseThrow(() -> new UserNotFoundException("User not found."));
+                .orElseThrow(() -> new CustomException(AppErrorCodes.ERR_2002));
     }
 
     @Override
     public User loadUserByEmail(String email) {
         // Fetch user by email, throw exception if not found
         return userRepository.findByEmail(email)
-                .orElseThrow(() -> new UserNotFoundException("User not found."));
+                .orElseThrow(() -> new CustomException(AppErrorCodes.ERR_2002));
     }
 
     @Override
     public User loadUserByUsername(String username) {
         // Fetch user by username, throw exception if not found
         return userRepository.findByUsername(username)
-                .orElseThrow(() -> new UserNotFoundException("User not found."));
+                .orElseThrow(() -> new CustomException(AppErrorCodes.ERR_2002));
     }
 
     @Override
-    public User updateUserProfile(UserUpdateRequestDto userUpdateRequestDto) {
+    public User updateUserProfile(UserProfileUpdateRequestDto userProfileUpdateRequestDto) {
         // Retrieve currently logged-in user
         User currentUser = UserUtil.getLoggedInUser();
 
         // Update user details and save changes
-        currentUser.setFullname(userUpdateRequestDto.getFullname());
-        currentUser.setPassword(passwordEncoder.encode(userUpdateRequestDto.getPassword()));
+        currentUser.setFullname(userProfileUpdateRequestDto.getFullname());
 
         return userRepository.save(currentUser);
     }
