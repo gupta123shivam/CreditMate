@@ -13,13 +13,13 @@ import java.util.List;
  * Controller interface for managing credit card operations.
  * Provides endpoints for applying, viewing, updating, deleting, and managing credit cards.
  */
-@PreAuthorize("isAuthenticated() and hasRole('OWNER')")
+@PreAuthorize("isAuthenticated() and hasRole('ROLE_OWNER')")
 @RequestMapping("/api/credit-cards")
 public interface CreditCardController {
 
     /**
      * Applies for a new credit card.
-     * Accessible only by authenticated users with the OWNER role.
+     * Accessible only by authenticated users with the ROLE_OWNER role.
      *
      * @return a ResponseEntity containing the credit card response details
      */
@@ -28,7 +28,7 @@ public interface CreditCardController {
 
     /**
      * Retrieves details of a specific credit card.
-     * Accessible only by authenticated users with the OWNER role.
+     * Accessible only by authenticated users with the ROLE_OWNER role.
      *
      * @param cardId the (Long id as in DB) ID of the credit card
      * @return a ResponseEntity containing the credit card response details
@@ -38,7 +38,7 @@ public interface CreditCardController {
 
     /**
      * Updates details of a specific credit card.
-     * Accessible only by authenticated users with the OWNER role.
+     * Accessible only by authenticated users with the ROLE_OWNER role.
      *
      * @param cardId               the ID of the credit card
      * @param creditCardRequestDto the updated credit card details
@@ -51,7 +51,7 @@ public interface CreditCardController {
 
     /**
      * Deletes a specific credit card.
-     * Accessible only by authenticated users with the OWNER role.
+     * Accessible only by authenticated users with the ROLE_OWNER role.
      *
      * @param cardId the ID of the credit card to be deleted
      * @return a ResponseEntity with no content
@@ -61,7 +61,7 @@ public interface CreditCardController {
 
     /**
      * Retrieves a list of all credit cards for the authenticated user.
-     * Accessible only by authenticated users with the OWNER role.
+     * Accessible only by authenticated users with the ROLE_OWNER role.
      *
      * @return a ResponseEntity containing a list of credit card response details
      */
@@ -70,7 +70,7 @@ public interface CreditCardController {
 
     /**
      * Activates a specific credit card.
-     * Accessible only by authenticated users with the OWNER role.
+     * Accessible only by authenticated users with the ROLE_OWNER role.
      *
      * @param cardId the ID of the credit card to be activated
      * @return a ResponseEntity with no content
@@ -80,7 +80,7 @@ public interface CreditCardController {
 
     /**
      * Deactivates a specific credit card.
-     * Accessible only by authenticated users with the OWNER role.
+     * Accessible only by authenticated users with the ROLE_OWNER role.
      *
      * @param cardId the ID of the credit card to be deactivated
      * @return a ResponseEntity with no content

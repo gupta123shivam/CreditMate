@@ -10,24 +10,24 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
  * Controller interface for administrative operations.
- * All methods in this controller are accessible only to users with ADMIN role.
+ * All methods in this controller are accessible only to users with ROLE_ADMIN role.
  */
-@PreAuthorize("isAuthenticated() and hasRole('ADMIN')")
+@PreAuthorize("isAuthenticated() and hasRole('ROLE_ADMIN')")
 @RequestMapping("/api/admin")
 public interface AdminController {
 
     /**
-     * Test endpoint for ADMIN users.
-     * Accessible only by authenticated users with ADMIN role.
+     * Test endpoint for ROLE_ADMIN users.
+     * Accessible only by authenticated users with ROLE_ADMIN role.
      *
-     * @return a test string for ADMIN users
+     * @return a test string for ROLE_ADMIN users
      */
     @GetMapping("/test")
     String testAdmin();
 
     /**
      * Retrieves user details by UUID.
-     * Accessible only by users with ADMIN role.
+     * Accessible only by users with ROLE_ADMIN role.
      *
      * @param uuid the UUID of the user
      * @return a ResponseEntity containing user details

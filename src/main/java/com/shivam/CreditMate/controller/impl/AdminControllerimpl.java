@@ -35,18 +35,18 @@ public class AdminControllerimpl implements AdminController {
 
     /**
      * Test endpoint for administrative access.
-     * This endpoint is meant to be accessible only by users with ADMIN role.
+     * This endpoint is meant to be accessible only by users with ROLE_ADMIN role.
      *
      * @return a string indicating access restriction
      */
     @Override
     public String testAdmin() {
-        return "This must be only accessible to ADMIN";
+        return "This must be only accessible to ROLE_ADMIN";
     }
 
     /**
      * Retrieves user details by UUID.
-     * Accessible only by users with ADMIN role.
+     * Accessible only by users with ROLE_ADMIN role.
      *
      * @param uuid the UUID of the user to retrieve
      * @return a ResponseEntity containing the user details

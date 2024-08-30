@@ -13,7 +13,7 @@ import java.util.List;
  * Controller interface for managing credit card transactions.
  * Provides endpoints for creating and retrieving transactions.
  */
-@PreAuthorize("isAuthenticated() and hasRole('OWNER')")
+@PreAuthorize("isAuthenticated() and hasRole('ROLE_OWNER')")
 @RequestMapping("/api/transactions")
 public interface TransactionController {
 

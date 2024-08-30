@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
  * Controller interface for managing credit card statements.
  * Provides endpoints for generating and retrieving statements.
  */
-@PreAuthorize("isAuthenticated() and hasRole('OWNER')")
+@PreAuthorize("isAuthenticated() and hasRole('ROLE_OWNER')")
 @RequestMapping("/api/statements")
 public interface StatementController {
 

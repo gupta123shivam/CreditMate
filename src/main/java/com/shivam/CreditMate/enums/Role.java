@@ -1,6 +1,6 @@
 package com.shivam.CreditMate.enums;
 
 public enum Role {
-    OWNER,
-    ADMIN
+    ROLE_OWNER,
+    ROLE_ADMIN
 }
