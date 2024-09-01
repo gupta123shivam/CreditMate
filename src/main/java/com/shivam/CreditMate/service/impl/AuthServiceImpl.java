@@ -17,7 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -68,35 +67,35 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public LoginResponseDto loginUser(LoginRequestDto input) {
         input.setUsername(input.getEmail());
-        try {
-            // Find the user by email
-            User foundUser = userRepository.findByUsername(input.getUsername())
-                    .orElseThrow(() -> new CustomException(AppErrorCodes.ERR_2002));
+        // Find the user by email
+        User foundUser = userRepository.findByUsername(input.getUsername())
+                .orElseThrow(() -> new CustomException(AppErrorCodes.ERR_2002));
 
-            // Authenticate user
-            Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                            input.getEmail(),
-                            input.getPassword()
-                    )
-            );
+        // Password marched or not
+        if (!passwordEncoder.matches(input.getPassword(), foundUser.getPassword()))
+            throw new CustomException(AppErrorCodes.ERR_2004);
 
-            // Mark user as logged in and save
-            foundUser.setLoggedIn(true);
-            userRepository.save(foundUser);
+        // Authenticate user
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        input.getEmail(),
+                        input.getPassword()
+                )
+        );
 
-            // Generate JWT token
-            User userDetails = (User) authentication.getPrincipal();
-            String jwtToken = jwtUtil.generateToken(userDetails);
+        // Mark user as logged in and save
+        foundUser.setLoggedIn(true);
+        userRepository.save(foundUser);
 
-            // Prepare and return login response
-            LoginResponseDto loginResponseDto = userMapper.userToLoginResponseDto(userDetails);
-            loginResponseDto.setJwtToken(jwtToken);
+        // Generate JWT token
+        User userDetails = (User) authentication.getPrincipal();
+        String jwtToken = jwtUtil.generateToken(userDetails);
 
-            return loginResponseDto;
-        } catch (AuthenticationException e) {
-            throw new CustomException(AppErrorCodes.ERR_2003);
-        }
+        // Prepare and return login response
+        LoginResponseDto loginResponseDto = userMapper.userToLoginResponseDto(userDetails);
+        loginResponseDto.setJwtToken(jwtToken);
+
+        return loginResponseDto;
     }
 
     @Override

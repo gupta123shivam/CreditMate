@@ -63,12 +63,18 @@ public class JwtUtil {
     }
 
     // Validate token by checking username and expiration
-    public boolean validateToken(String token, User userDetails) {
+    public boolean validateTokenWithCurrentUser(String token, User userDetails) {
         final String username = extractUsername(token);
 
-        return (userDetails.isLoggedIn() &&
+        return (
+//                userDetails.isLoggedIn() &&
                 username.equals(userDetails.getUsername()) &&
-                !isTokenExpired(token));
+                        !isTokenExpired(token));
+    }
+
+    // Validate token by checking username and expiration
+    public boolean validateToken(String token) {
+        return (!isTokenExpired(token));
     }
 
     // Convert hex string to byte array

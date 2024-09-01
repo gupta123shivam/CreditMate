@@ -7,6 +7,7 @@ import com.shivam.CreditMate.dto.response.LoginResponseDto;
 import com.shivam.CreditMate.dto.response.RegisterResponseDto;
 import com.shivam.CreditMate.model.User;
 import com.shivam.CreditMate.service.AuthService;
+import com.shivam.CreditMate.utils.UserUtil;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,6 +83,7 @@ public class AuthControllerImpl implements AuthController {
      */
     @Override
     public ResponseEntity<String> logoutUser(@AuthenticationPrincipal User user) {
-        return ResponseEntity.ok(authService.logoutUser(user));
+        User currentUser = UserUtil.getLoggedInUser();
+        return ResponseEntity.ok(authService.logoutUser(currentUser));
     }
 }

@@ -1,5 +1,7 @@
 package com.shivam.CreditMate.filter;
 
+import com.shivam.CreditMate.exception.AppErrorCodes;
+import com.shivam.CreditMate.exception.exceptions.CustomException;
 import com.shivam.CreditMate.model.User;
 import com.shivam.CreditMate.security.JwtUtil;
 import com.shivam.CreditMate.service.UserService;
@@ -73,7 +75,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 User userDetails = userService.loadUserByUsername(username);
 
                 // Validate the token with the user details
-                if (jwtUtil.validateToken(jwt, userDetails)) {
+                if (jwtUtil.validateTokenWithCurrentUser(jwt, userDetails)) {
                     // Create an authentication token for the user
                     UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                             userDetails,
@@ -93,7 +95,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
         } catch (Exception exception) {
             // Handle any exception that occurs during filtering using the configured exception resolver
-            handlerExceptionResolver.resolveException(request, response, null, exception);
+            CustomException e = new CustomException(AppErrorCodes.ERR_2003, exception);
+            handlerExceptionResolver.resolveException(request, response, null, e);
         }
     }
 }

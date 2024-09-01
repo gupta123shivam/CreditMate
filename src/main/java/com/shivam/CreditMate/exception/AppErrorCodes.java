@@ -12,9 +12,10 @@ public enum AppErrorCodes implements ErrorCode {
     ERR_1005("Constraints not followed", HttpStatus.BAD_REQUEST),
 
     // Auth errors
-    ERR_2001("Email already exists", HttpStatus.CONFLICT),
+    ERR_2001("Email already exists", HttpStatus.BAD_REQUEST),
     ERR_2002("User not found", HttpStatus.NOT_FOUND),
-    ERR_2003("Invalid credentials", HttpStatus.UNAUTHORIZED),
+    ERR_2003("Unauthorized access", HttpStatus.UNAUTHORIZED),
+    ERR_2004("Wrong credentials", HttpStatus.UNAUTHORIZED),
 
     //Credit Card Exception
     ERR_3001("Credit Card does not exist.", HttpStatus.NOT_FOUND),
