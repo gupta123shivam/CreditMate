@@ -37,7 +37,6 @@ public interface UserController {
     @PutMapping("/profile")
     public ResponseEntity<UserDetailsDto> updateUserProfile(@Valid @RequestBody UserProfileUpdateRequestDto userProfileUpdateRequestDto);
 
-    // TODO
     @PutMapping("/change-password")
     public ResponseEntity<String> updatePassword(@RequestBody PasswordChangeDto passwordChangeDto);
 }

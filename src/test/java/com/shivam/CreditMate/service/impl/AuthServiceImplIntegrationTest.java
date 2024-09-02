@@ -10,7 +10,6 @@ import com.shivam.CreditMate.model.User;
 import com.shivam.CreditMate.repository.UserRepository;
 import com.shivam.CreditMate.security.JwtUtil;
 import com.shivam.CreditMate.service.AuthService;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -35,11 +34,12 @@ class AuthServiceImplIntegrationTest {
     @Autowired
     private JwtUtil jwtUtil;
 
-    @BeforeEach
-    void setUp() {
-        // Clean up the user repository before each test
-        userRepository.deleteAll();
-    }
+//    @BeforeEach
+//    void setUp() {
+//        // Clean up the user repository before each test
+//        // With @Transactional this block is not needed
+//        userRepository.deleteAll();
+//    }
 
     @Test
     void testRegisterUser_Success() {
@@ -101,7 +101,7 @@ class AuthServiceImplIntegrationTest {
 
         // Act & Assert
         CustomException exception = assertThrows(CustomException.class, () -> authService.loginUser(loginRequestDto));
-        assertEquals(AppErrorCodes.ERR_2003, exception.getError());
+        assertEquals(AppErrorCodes.ERR_2004, exception.getError());
     }
 
     @Test

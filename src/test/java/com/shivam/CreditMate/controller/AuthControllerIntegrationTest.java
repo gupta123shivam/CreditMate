@@ -15,6 +15,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
@@ -27,8 +28,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
+@ActiveProfiles(profiles = "test")
 public class AuthControllerIntegrationTest {
 
     private final PasswordEncoder passwordEncoder;
@@ -110,9 +112,6 @@ public class AuthControllerIntegrationTest {
 
     @Test
     public void testLoginUserSuccess() throws Exception {
-        // set registered user whose jwt token we have as loggedIn
-//        userRepository.findByUsername()
-
         // Login user
         LoginRequestDto loginRequest = new LoginRequestDto();
         loginRequest.setEmail("test@example.com");
