@@ -64,11 +64,10 @@ public class UserServiceImpl implements UserService {
         // Retrieve currently logged-in user
         User currentUser = UserUtil.getLoggedInUser();
 
-        if (currentUser.getPassword().equals(passwordEncoder.encode(input.getOldPassword())))
+        if (!passwordEncoder.matches(input.getOldPassword(), currentUser.getPassword()))
             throw new CustomException(AppErrorCodes.ERR_5002);
+
         currentUser.setPassword(passwordEncoder.encode(input.getNewPassword()));
         userRepository.save(currentUser);
     }
-
-
 }

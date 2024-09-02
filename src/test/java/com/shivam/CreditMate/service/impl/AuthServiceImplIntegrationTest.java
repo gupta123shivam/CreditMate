@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
-class AuthServiceImplTest {
+class AuthServiceImplIntegrationTest {
 
     @Autowired
     private AuthService authService;
