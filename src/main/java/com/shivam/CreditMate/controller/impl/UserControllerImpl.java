@@ -11,12 +11,14 @@ import com.shivam.CreditMate.service.UserService;
 import com.shivam.CreditMate.utils.UserUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
  * Implementation of {@link UserController} for managing user-related operations.
  */
 @RestController
+@Validated
 public class UserControllerImpl implements UserController {
 
     @Autowired

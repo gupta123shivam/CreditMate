@@ -15,6 +15,7 @@ public class RegisterRequestDto {
 
     // TODO save min and max size as constants and insert it here
     @NotBlank(message = "Password is necessary")
+//    @ValidPassword
     private String password;
 
     @NotBlank(message = "Email is mandatory")

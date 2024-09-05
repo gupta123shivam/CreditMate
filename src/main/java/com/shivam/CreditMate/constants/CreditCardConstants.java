@@ -8,4 +8,6 @@ import com.shivam.CreditMate.model.CreditCard;
 public class CreditCardConstants {
     public static final int MAX_CARD_NUMBER_LENGTH = 16;
     public static final int MIN_CREDIT_SCORE = 650;
+    public static final int MAX_CREDIT_LIMIT = 100000;
+    public static final int MIN_CREDIT_LIMIT = 1000;
 }
