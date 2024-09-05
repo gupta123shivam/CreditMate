@@ -8,4 +8,6 @@ package com.shivam.CreditMate.constants;
 public class AuthConstants {
     public static final int PASSWORD_MIN_SIZE = 2;
     public static final int PASSWORD_MAX_SIZE = 10;
+    public static final int PASSWORD_EXPIRY_DAYS = 100;
+    public static final int MAX_LOGIN_ATTEMPTS = 3;
 }
